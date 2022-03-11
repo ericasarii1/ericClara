@@ -54,48 +54,47 @@ def get_user_id(username):
 
 @dev_plus
 def broadcast(update: Update, context: CallbackContext):
-    to_send = update.effective_message.text.split(None, 1)
+    msg = update.effective_message
 
-    if len(to_send) >= 2:
-        to_group = False
-        to_user = False
-        if to_send[0] == "/broadcastgroups":
-            to_group = True
-        if to_send[0] == "/broadcastusers":
-            to_user = True
-        else:
-            to_group = to_user = True
-        chats = sql.get_all_chats() or []
-        users = get_all_users()
-        failed = 0
-        failed_user = 0
-        if to_group:
-            for chat in chats:
-                try:
-                    context.bot.sendMessage(
-                        int(chat.chat_id),
-                        to_send[1],
-                        parse_mode="MARKDOWN",
-                        disable_web_page_preview=True,
-                    )
-                    sleep(0.1)
-                except TelegramError:
-                    failed += 1
-        if to_user:
-            for user in users:
-                try:
-                    context.bot.sendMessage(
-                        int(user.user_id),
-                        to_send[1],
-                        parse_mode="MARKDOWN",
-                        disable_web_page_preview=True,
-                    )
-                    sleep(0.1)
-                except TelegramError:
-                    failed_user += 1
-        update.effective_message.reply_text(
-            f"Broadcast complete.\nGroups failed: {failed}.\nUsers failed: {failed_user}.",
+    option = msg.text.split(None, 1)[0]
+
+    to_group = False
+    to_user = False
+    if option == "/broadcastgroups":
+        to_group = True
+    elif option == "/broadcastusers":
+        to_user = True
+    else:
+        to_group = to_user = True
+
+    failed_group = 0
+    failed_user = 0
+    successful_group = 0
+    successful_user = 0
+    if to_group:
+        for group in sql.get_all_chats():
+            try:
+                msg.reply_to_message.copy(int(group.chat_id))
+                successful_group += 1
+                sleep(0.1)
+            except TelegramError:
+                failed_group += 1
+    if to_user:
+        for user in sql.get_all_users():
+            try:
+                msg.reply_to_message.copy(int(user.user_id))
+                successful_user += 1
+                sleep(0.1)
+            except TelegramError:
+                failed_user += 1
+
+    msg.reply_text(
+        text = (
+            "Broadcast complete.\n"
+            f"Groups success/fail: {successful_group}/{failed_group}.\n"
+            f"Users success/failed: {successful_user}/{failed_user}."
         )
+    )
 
 
 def log_user(update: Update, context: CallbackContext):
