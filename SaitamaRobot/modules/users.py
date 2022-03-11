@@ -89,7 +89,7 @@ def broadcast(update: Update, context: CallbackContext):
                 failed_user += 1
 
     msg.reply_text(
-        text = (
+        text=(
             "Broadcast complete.\n"
             f"Groups success/fail: {successful_group}/{failed_group}.\n"
             f"Users success/failed: {successful_user}/{failed_user}."
