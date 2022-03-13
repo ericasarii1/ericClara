@@ -14,15 +14,12 @@ from telegram.ext import CallbackContext, CommandHandler
 namespaces = {}
 
 
-def namespace_of(chat, update, bot):
+def namespace_of(chat, update, context):
     if chat not in namespaces:
         namespaces[chat] = {
             "__builtins__": globals()["__builtins__"],
-            "bot": bot,
-            "effective_message": update.effective_message,
-            "effective_user": update.effective_user,
-            "effective_chat": update.effective_chat,
             "update": update,
+            "context": context,
         }
 
     return namespaces[chat]
@@ -34,7 +31,7 @@ def log_input(update):
     LOGGER.info(f"IN: {update.effective_message.text} (user={user}, chat={chat})")
 
 
-def send(msg, bot, update):
+def send(msg, update, bot):
     if len(str(msg)) > 2000:
         with io.BytesIO(str.encode(msg)) as out_file:
             out_file.name = "output.txt"
@@ -51,13 +48,13 @@ def send(msg, bot, update):
 @dev_plus
 def evaluate(update: Update, context: CallbackContext):
     bot = context.bot
-    send(do(eval, bot, update), bot, update)
+    send(do(eval, update, context), update, bot)
 
 
 @dev_plus
 def execute(update: Update, context: CallbackContext):
     bot = context.bot
-    send(do(exec, bot, update), bot, update)
+    send(do(exec, update, context), update, bot)
 
 
 def cleanup_code(code):
@@ -66,11 +63,11 @@ def cleanup_code(code):
     return code.strip("` \n")
 
 
-def do(func, bot, update):
+def do(func, update, context):
     log_input(update)
     content = update.message.text.split(" ", 1)[-1]
     body = cleanup_code(content)
-    env = namespace_of(update.message.chat_id, update, bot)
+    env = namespace_of(update.message.chat_id, update, context)
 
     os.chdir(os.getcwd())
     with open(
@@ -120,11 +117,11 @@ def clear(update: Update, context: CallbackContext):
     global namespaces
     if update.message.chat_id in namespaces:
         del namespaces[update.message.chat_id]
-    send("Cleared locals.", bot, update)
+    send("Cleared locals.", update, bot)
 
 
-EVAL_HANDLER = CommandHandler(("e", "ev", "eva", "eval"), evaluate, run_async=True)
-EXEC_HANDLER = CommandHandler(("x", "ex", "exe", "exec", "py"), execute, run_async=True)
+EVAL_HANDLER = CommandHandler(("e", "ev", "eval"), evaluate, run_async=True)
+EXEC_HANDLER = CommandHandler(("x", "ex", "exec"), execute, run_async=True)
 CLEAR_HANDLER = CommandHandler("clearlocals", clear, run_async=True)
 
 dispatcher.add_handler(EVAL_HANDLER)
