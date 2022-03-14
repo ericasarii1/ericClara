@@ -36,7 +36,7 @@ from SaitamaRobot import (
         PORT,
         StartTime,
         SUPPORT_CHAT,
-        telethn,
+        #telethn,
         TELEGRAM_BOT_TOKEN,
         updater,
         URL,
@@ -104,7 +104,7 @@ And the following:
 
 SAITAMA_IMG = "https://telegra.ph/file/0576731c890d2cf9cecce.jpg"
 
-if DONATE_LINK:
+if DONATION_LINK:
     DONATE_STRING = (
         f"You can donate to the person currently running me [here]({DONATION_LINK})")
 else:
@@ -670,15 +670,15 @@ def main():
         LOGGER.info("Using long polling.")
         updater.start_polling(timeout=15, read_latency=4, drop_pending_updates=True)
 
-    if len(sys.argv) not in (1, 3, 4):
-        telethn.disconnect()
-    else:
-        telethn.run_until_disconnected()
+    #if len(sys.argv) not in (1, 3, 4):
+    #    telethn.disconnect()
+    #else:
+    #    telethn.run_until_disconnected()
 
     updater.idle()
 
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded modules: " + str(ALL_MODULES))
-    telethn.start(bot_token=TELEGRAM_BOT_TOKEN)
+    #telethn.start(bot_token=TELEGRAM_BOT_TOKEN)
     main()

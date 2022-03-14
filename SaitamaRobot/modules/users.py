@@ -17,7 +17,7 @@ from SaitamaRobot.modules.sql.users_sql import get_all_users
 
 USERS_GROUP = 4
 CHAT_GROUP = 5
-DEV_AND_MORE = DEV_USERS.append(int(OWNER_USERID))
+DEV_AND_MORE = DEV_USERS.add(OWNER_USERID)
 
 
 def get_user_id(username):

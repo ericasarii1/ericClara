@@ -21,8 +21,6 @@ from telegram.ext import MessageHandler
 from telegram.utils.helpers import mention_html
 
 from SaitamaRobot import dispatcher
-from SaitamaRobot import TIGERS
-from SaitamaRobot import WOLVES
 from SaitamaRobot.modules.disable import DisableAbleCommandHandler
 from SaitamaRobot.modules.helper_funcs.chat_status import bot_admin
 from SaitamaRobot.modules.helper_funcs.chat_status import can_restrict
@@ -53,24 +51,6 @@ def warn(
 ) -> str:
     if is_user_admin(chat, user.id):
         # message.reply_text("Damn admins, They are too far to be One Punched!")
-        return
-
-    if user.id in TIGERS:
-        if warner:
-            message.reply_text("Tigers cant be warned.")
-        else:
-            message.reply_text(
-                "Tiger triggered an auto warn filter!\n I can't warn tigers but they should avoid abusing this.",
-            )
-        return
-
-    if user.id in WOLVES:
-        if warner:
-            message.reply_text("Wolf disasters are warn immune.")
-        else:
-            message.reply_text(
-                "Wolf Disaster triggered an auto warn filter!\nI can't warn wolves but they should avoid abusing this.",
-            )
         return
 
     if warner:

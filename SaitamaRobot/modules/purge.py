@@ -4,13 +4,7 @@ from telethon import events
 from telethon.errors.rpcerrorlist import MessageDeleteForbiddenError
 from telethon.tl.types import ChannelParticipantsAdmins
 
-from SaitamaRobot import DEMONS
-from SaitamaRobot import DEV_USERS
-from SaitamaRobot import DRAGONS
-from SaitamaRobot import OWNER_USERID
 from SaitamaRobot import telethn
-from SaitamaRobot import TIGERS
-from SaitamaRobot import WOLVES
 from SaitamaRobot.modules.helper_funcs.telethn.chatstatus import can_delete_messages
 from SaitamaRobot.modules.helper_funcs.telethn.chatstatus import user_is_admin
 

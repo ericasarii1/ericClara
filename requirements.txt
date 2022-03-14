@@ -1,5 +1,6 @@
 aiohttp>=2.2.5
 ruamel.yaml
+markdown2
 alphabet_detector
 beautifulsoup4
 bleach

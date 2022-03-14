@@ -7,9 +7,6 @@ from SaitamaRobot import (
     DEV_USERS,
     DRAGONS,
     SUPPORT_CHAT,
-    DEMONS,
-    TIGERS,
-    WOLVES,
     dispatcher,
 )
 
@@ -22,11 +19,11 @@ THREAD_LOCK = RLock()
 
 
 def is_whitelist_plus(chat: Chat, user_id: int, member: ChatMember = None) -> bool:
-    return any(user_id in user for user in [WOLVES, TIGERS, DEMONS, DRAGONS, DEV_USERS])
+    return any(user_id in user for user in [DRAGONS, DEV_USERS])
 
 
 def is_support_plus(chat: Chat, user_id: int, member: ChatMember = None) -> bool:
-    return user_id in DEMONS or user_id in DRAGONS or user_id in DEV_USERS
+    return user_id in DRAGONS or user_id in DEV_USERS
 
 
 def is_sudo_plus(chat: Chat, user_id: int, member: ChatMember = None) -> bool:
@@ -79,8 +76,6 @@ def is_user_ban_protected(chat: Chat, user_id: int, member: ChatMember = None) -
         chat.type == "private"
         or user_id in DRAGONS
         or user_id in DEV_USERS
-        or user_id in WOLVES
-        or user_id in TIGERS
         or chat.all_members_are_administrators
         or user_id in [777000, 1087968824]
     ):  # Count telegram and Group Anonymous as admin

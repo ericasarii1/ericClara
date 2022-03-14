@@ -29,7 +29,8 @@ OWNER_USERID = int(config_data.get("OWNER_USERID"))
 OWNER_USERNAME = config_data.get("OWNER_USERNAME")
 JOIN_LOGGER = config_data.get("JOIN_LOGGER")
 ALLOW_CHATS = config_data.get("ALLOW_CHATS")
-DEV_USERS = set(config_data.get("DEV_USERS"))
+DEV_USERS = set(config_data.get("DEV_USERS") or [])
+DRAGONS = set(config_data.get("DRAGONS") or [])
 EVENT_LOGS = config_data.get("EVENT_LOGS")
 WEBHOOK = config_data.get("WEBHOOK")
 URL = config_data.get("URL")
@@ -50,16 +51,16 @@ WALL_API = config_data.get("WALL_API")
 SUPPORT_CHAT = config_data.get("SUPPORT_CHAT")
 INFOPIC = config_data.get("INFOPIC")
 
-BL_CHATS = set(config_data.get("BL_CHATS"))
+BL_CHATS = set(config_data.get("BL_CHATS") or [])
 DEV_USERS.add(OWNER_USERID)
 
 updater = telegram.ext.Updater(TELEGRAM_BOT_TOKEN)
 dispatcher = updater.dispatcher
 
-telethn = TelegramClient(
-        "saitama",
-        env.get("TELEGRAM_API_ID"), env.get("TELEGRAM_API_HASH"),
-    )
+#telethn = TelegramClient(
+#        "saitama",
+#        env.get("TELEGRAM_API_ID"), env.get("TELEGRAM_API_HASH"),
+#    )
 
 # Load at end to ensure all prev variables have been set
 from SaitamaRobot.modules.helper_funcs.handlers import (

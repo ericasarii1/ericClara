@@ -14,8 +14,6 @@ from SaitamaRobot import (
     SUPPORT_CHAT,
     OWNER_USERID,
     DRAGONS,
-    TIGERS,
-    WOLVES,
     dispatcher,
 )
 from SaitamaRobot.modules.disable import DisableAbleCommandHandler
@@ -608,14 +606,6 @@ def fed_ban(update: Update, context: CallbackContext):
 
     if int(user_id) in DRAGONS:
         message.reply_text("Dragons cannot be fed banned!")
-        return
-
-    if int(user_id) in TIGERS:
-        message.reply_text("Tigers cannot be fed banned!")
-        return
-
-    if int(user_id) in WOLVES:
-        message.reply_text("Wolves cannot be fed banned!")
         return
 
     if user_id in [777000, 1087968824]:
@@ -1735,12 +1725,6 @@ def fed_import_bans(update: Update, context: CallbackContext):
                     if int(import_userid) in DRAGONS:
                         failed += 1
                         continue
-                    if int(import_userid) in TIGERS:
-                        failed += 1
-                        continue
-                    if int(import_userid) in WOLVES:
-                        failed += 1
-                        continue
                     multi_fed_id.append(fed_id)
                     multi_import_userid.append(str(import_userid))
                     multi_import_firstname.append(import_firstname)
@@ -1811,12 +1795,6 @@ def fed_import_bans(update: Update, context: CallbackContext):
                         failed += 1
                         continue
                     if int(import_userid) in DRAGONS:
-                        failed += 1
-                        continue
-                    if int(import_userid) in TIGERS:
-                        failed += 1
-                        continue
-                    if int(import_userid) in WOLVES:
                         failed += 1
                         continue
                     multi_fed_id.append(fed_id)

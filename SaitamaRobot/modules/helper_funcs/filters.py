@@ -1,15 +1,9 @@
-from SaitamaRobot import DEV_USERS, DRAGONS, DEMONS
+from SaitamaRobot import DEV_USERS, DRAGONS
 from telegram import Message
 from telegram.ext import MessageFilter
 
 
 class CustomFilters(object):
-    class _Supporters(MessageFilter):
-        def filter(self, message: Message):
-            return bool(message.from_user and message.from_user.id in DEMONS)
-
-    support_filter = _Supporters()
-
     class _Sudoers(MessageFilter):
         def filter(self, message: Message):
             return bool(message.from_user and message.from_user.id in DRAGONS)

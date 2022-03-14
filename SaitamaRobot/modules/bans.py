@@ -10,9 +10,6 @@ from SaitamaRobot import (
     LOGGER,
     OWNER_USERID,
     DRAGONS,
-    DEMONS,
-    TIGERS,
-    WOLVES,
     dispatcher,
 )
 from SaitamaRobot.modules.disable import DisableAbleCommandHandler
@@ -70,16 +67,6 @@ def ban(update: Update, context: CallbackContext) -> str:
             message.reply_text(
                 "Fighting this Dragon here will put civilian lives at risk.",
             )
-        elif user_id in DEMONS:
-            message.reply_text(
-                "Bring an order from Heroes association to fight a Demon disaster.",
-            )
-        elif user_id in TIGERS:
-            message.reply_text(
-                "Bring an order from Heroes association to fight a Tiger disaster.",
-            )
-        elif user_id in WOLVES:
-            message.reply_text("Wolf abilities make them ban immune!")
         else:
             message.reply_text("This user has immunity and cannot be banned.")
         return log_message
@@ -381,7 +368,7 @@ def selfunban(context: CallbackContext, update: Update) -> str:
     message = update.effective_message
     user = update.effective_user
     bot, args = context.bot, context.args
-    if user.id not in DRAGONS or user.id not in TIGERS:
+    if user.id not in DRAGONS:
         return
 
     try:

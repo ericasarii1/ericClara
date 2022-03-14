@@ -5,9 +5,6 @@ from SaitamaRobot import (
     DEV_USERS,
     OWNER_USERID,
     DRAGONS,
-    DEMONS,
-    TIGERS,
-    WOLVES,
     dispatcher,
 )
 from SaitamaRobot.modules.helper_funcs.chat_status import dev_plus
@@ -21,8 +18,7 @@ from telegram.error import BadRequest
 from telegram.ext import CallbackContext, CommandHandler
 from telegram.utils.helpers import mention_html
 
-BLACKLISTWHITELIST = [OWNER_USERID] + DEV_USERS + DRAGONS + WOLVES + DEMONS
-BLABLEUSERS = [OWNER_USERID] + DEV_USERS
+BLACKLISTWHITELIST = DEV_USERS | DRAGONS
 
 
 @dev_plus
@@ -141,7 +137,7 @@ def __user_info__(user_id):
         return ""
     if user_id == dispatcher.bot.id:
         return ""
-    if int(user_id) in DRAGONS + TIGERS + WOLVES:
+    if int(user_id) in DRAGONS:
         return ""
     if is_blacklisted:
         text = text.format("Yes")
