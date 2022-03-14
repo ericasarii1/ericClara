@@ -1,4 +1,5 @@
 aiohttp>=2.2.5
+ruamel.yaml
 alphabet_detector
 beautifulsoup4
 bleach
@@ -8,8 +9,6 @@ emoji
 feedparser
 future
 geopy
-git+https://github.com/starry69/python-markdown2.git
-#googletrans
 gpytranslate
 humanize
 jikanpy

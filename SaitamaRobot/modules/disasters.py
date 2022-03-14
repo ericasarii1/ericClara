@@ -5,7 +5,7 @@ from typing import Optional
 
 from SaitamaRobot import (
     DEV_USERS,
-    OWNER_ID,
+    OWNER_USERID,
     DRAGONS,
     SUPPORT_CHAT,
     DEMONS,
@@ -530,7 +530,7 @@ def devlist(update: Update, context: CallbackContext):
         "<code>Gathering intel..</code>",
         parse_mode=ParseMode.HTML,
     )
-    true_dev = list(set(DEV_USERS) - {OWNER_ID})
+    true_dev = list(set(DEV_USERS) - {OWNER_USERID})
     reply = "<b>Hero Association Members ⚡️:</b>\n"
     for each_user in true_dev:
         user_id = int(each_user)

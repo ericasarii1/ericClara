@@ -1,41 +1,48 @@
-import importlib
-import re
-import time
-from sys import argv
+import importlib, re, time, sys
 from typing import Optional
 
-from telegram import InlineKeyboardButton
-from telegram import InlineKeyboardMarkup
-from telegram import ParseMode
-from telegram import Update
-from telegram.error import BadRequest
-from telegram.error import ChatMigrated
-from telegram.error import NetworkError
-from telegram.error import TelegramError
-from telegram.error import TimedOut
-from telegram.error import Unauthorized
-from telegram.ext import CallbackContext
-from telegram.ext import CallbackQueryHandler
-from telegram.ext import CommandHandler
-from telegram.ext import Filters
-from telegram.ext import MessageHandler
+from telegram import (
+        InlineKeyboardButton,
+        InlineKeyboardMarkup,
+        ParseMode,
+        Update,
+    )
+from telegram.error import (
+        BadRequest,
+        ChatMigrated,
+        NetworkError,
+        TelegramError,
+        TimedOut,
+        Unauthorized,
+    )
+from telegram.ext import (
+        CallbackContext,
+        CallbackQueryHandler,
+        CommandHandler,
+        Filters,
+        MessageHandler,
+    )
+
 from telegram.ext.dispatcher import DispatcherHandlerStop
 from telegram.utils.helpers import escape_markdown
 
-from SaitamaRobot import ALLOW_EXCL
-from SaitamaRobot import CERT_PATH
-from SaitamaRobot import dispatcher
-from SaitamaRobot import DONATION_LINK
-from SaitamaRobot import LOGGER
-from SaitamaRobot import OWNER_ID
-from SaitamaRobot import PORT
-from SaitamaRobot import StartTime
-from SaitamaRobot import SUPPORT_CHAT
-from SaitamaRobot import telethn
-from SaitamaRobot import TOKEN
-from SaitamaRobot import updater
-from SaitamaRobot import URL
-from SaitamaRobot import WEBHOOK
+from SaitamaRobot import (
+        ALLOW_EXCL,
+        CERT_PATH,
+        dispatcher,
+        DONATION_LINK,
+        LOGGER,
+        OWNER_USERID,
+        PORT,
+        StartTime,
+        SUPPORT_CHAT,
+        telethn,
+        TELEGRAM_BOT_TOKEN,
+        updater,
+        URL,
+        WEBHOOK,
+    )
+
 from SaitamaRobot.modules import ALL_MODULES
 from SaitamaRobot.modules.helper_funcs.chat_status import is_user_admin
 from SaitamaRobot.modules.helper_funcs.misc import paginate_modules
@@ -97,7 +104,12 @@ And the following:
 
 SAITAMA_IMG = "https://telegra.ph/file/0576731c890d2cf9cecce.jpg"
 
-DONATE_STRING = """ Won't be necessary as of now."""
+if DONATE_LINK:
+    DONATE_STRING = (
+        f"You can donate to the person currently running me [here]({DONATION_LINK})")
+else:
+    DONATE_STRING = """Won't be necessary for now."""
+
 
 IMPORTED = {}
 MIGRATEABLE = []
@@ -156,13 +168,6 @@ def send_help(chat_id, text, keyboard=None):
         disable_web_page_preview=True,
         reply_markup=keyboard,
     )
-
-
-def test(update: Update, context: CallbackContext):
-    # pprint(eval(str(update)))
-    # update.effective_message.reply_text("Hola tester! _I_ *have* `markdown`", parse_mode=ParseMode.MARKDOWN)
-    update.effective_message.reply_text("This person edited a message")
-    print(update.effective_message)
 
 
 def start(update: Update, context: CallbackContext):
@@ -585,30 +590,23 @@ def donate(update: Update, context: CallbackContext):
             parse_mode=ParseMode.MARKDOWN,
             disable_web_page_preview=True,
         )
+        return
 
-        if OWNER_ID != 254318997 and DONATION_LINK:
-            update.effective_message.reply_text(
-                "You can also donate to the person currently running me "
-                "[here]({})".format(DONATION_LINK),
-                parse_mode=ParseMode.MARKDOWN,
-            )
+    try:
+        bot.send_message(
+            user.id,
+            DONATE_STRING,
+            parse_mode=ParseMode.MARKDOWN,
+            disable_web_page_preview=True,
+        )
 
-    else:
-        try:
-            bot.send_message(
-                user.id,
-                DONATE_STRING,
-                parse_mode=ParseMode.MARKDOWN,
-                disable_web_page_preview=True,
-            )
-
-            update.effective_message.reply_text(
-                "I've PM'ed you about donating to my creator!",
-            )
-        except Unauthorized:
-            update.effective_message.reply_text(
-                "Contact me in PM first to get donation information.",
-            )
+        update.effective_message.reply_text(
+            "I've PM'ed you about donating to my creator!",
+        )
+    except Unauthorized:
+        update.effective_message.reply_text(
+            "Contact me in PM first to get donation information.",
+        )
 
 
 def migrate_chats(update: Update, context: CallbackContext):
@@ -663,16 +661,16 @@ def main():
         LOGGER.info("Using webhooks.")
         if CERT_PATH:
             updater.start_webhook(
-                webhook_url=URL + TOKEN, certificate=open(CERT_PATH, "rb")
+                webhook_url=URL + TELEGRAM_BOT_TOKEN, certificate=open(CERT_PATH, "rb")
             )
         else:
-            updater.start_webhook(webhook_url=URL + TOKEN)
+            updater.start_webhook(webhook_url=URL + TELEGRAM_BOT_TOKEN)
 
     else:
         LOGGER.info("Using long polling.")
         updater.start_polling(timeout=15, read_latency=4, drop_pending_updates=True)
 
-    if len(argv) not in (1, 3, 4):
+    if len(sys.argv) not in (1, 3, 4):
         telethn.disconnect()
     else:
         telethn.run_until_disconnected()
@@ -682,5 +680,5 @@ def main():
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded modules: " + str(ALL_MODULES))
-    telethn.start(bot_token=TOKEN)
+    telethn.start(bot_token=TELEGRAM_BOT_TOKEN)
     main()

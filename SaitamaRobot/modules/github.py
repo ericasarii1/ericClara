@@ -30,7 +30,7 @@ from SaitamaRobot import DEMONS
 from SaitamaRobot import DEV_USERS
 from SaitamaRobot import dispatcher
 from SaitamaRobot import DRAGONS
-from SaitamaRobot import OWNER_ID
+from SaitamaRobot import OWNER_USERID
 from SaitamaRobot import TIGERS
 from SaitamaRobot import TOKEN
 from SaitamaRobot import WOLVES

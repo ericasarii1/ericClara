@@ -22,7 +22,7 @@ from SaitamaRobot import DEV_USERS
 from SaitamaRobot import dispatcher
 from SaitamaRobot import DRAGONS
 from SaitamaRobot import INFOPIC
-from SaitamaRobot import OWNER_ID
+from SaitamaRobot import OWNER_USERID
 from SaitamaRobot import telethn as SaitamaTelethonClient
 from SaitamaRobot import TIGERS
 from SaitamaRobot import WOLVES
@@ -189,7 +189,7 @@ def info(update: Update, context: CallbackContext):
 
     disaster_level_present = False
 
-    if user.id == OWNER_ID:
+    if user.id == OWNER_USERID:
         text += "\n\nThe Disaster level of this person is 'God'."
         disaster_level_present = True
     elif user.id in DEV_USERS:

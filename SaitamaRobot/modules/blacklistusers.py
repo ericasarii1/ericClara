@@ -3,7 +3,7 @@ import html
 import SaitamaRobot.modules.sql.blacklistusers_sql as sql
 from SaitamaRobot import (
     DEV_USERS,
-    OWNER_ID,
+    OWNER_USERID,
     DRAGONS,
     DEMONS,
     TIGERS,
@@ -21,8 +21,8 @@ from telegram.error import BadRequest
 from telegram.ext import CallbackContext, CommandHandler
 from telegram.utils.helpers import mention_html
 
-BLACKLISTWHITELIST = [OWNER_ID] + DEV_USERS + DRAGONS + WOLVES + DEMONS
-BLABLEUSERS = [OWNER_ID] + DEV_USERS
+BLACKLISTWHITELIST = [OWNER_USERID] + DEV_USERS + DRAGONS + WOLVES + DEMONS
+BLABLEUSERS = [OWNER_USERID] + DEV_USERS
 
 
 @dev_plus

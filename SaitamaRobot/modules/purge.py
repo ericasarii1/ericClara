@@ -7,7 +7,7 @@ from telethon.tl.types import ChannelParticipantsAdmins
 from SaitamaRobot import DEMONS
 from SaitamaRobot import DEV_USERS
 from SaitamaRobot import DRAGONS
-from SaitamaRobot import OWNER_ID
+from SaitamaRobot import OWNER_USERID
 from SaitamaRobot import telethn
 from SaitamaRobot import TIGERS
 from SaitamaRobot import WOLVES
