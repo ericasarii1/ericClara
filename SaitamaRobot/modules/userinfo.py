@@ -77,9 +77,7 @@ def get_id(update: Update, context: CallbackContext):
 
 
 @SaitamaTelethonClient.on(
-    events.NewMessage(
-        pattern="/ginfo ", from_users=(DRAGONS | DEV_USERS)
-    )
+    events.NewMessage(pattern="/ginfo ", from_users=(DRAGONS | DEV_USERS))
 )
 async def group_info(event) -> None:
     chat = event.text.split(" ", 1)[1]

@@ -2,46 +2,46 @@ import importlib, re, time, sys
 from typing import Optional
 
 from telegram import (
-        InlineKeyboardButton,
-        InlineKeyboardMarkup,
-        ParseMode,
-        Update,
-    )
+    InlineKeyboardButton,
+    InlineKeyboardMarkup,
+    ParseMode,
+    Update,
+)
 from telegram.error import (
-        BadRequest,
-        ChatMigrated,
-        NetworkError,
-        TelegramError,
-        TimedOut,
-        Unauthorized,
-    )
+    BadRequest,
+    ChatMigrated,
+    NetworkError,
+    TelegramError,
+    TimedOut,
+    Unauthorized,
+)
 from telegram.ext import (
-        CallbackContext,
-        CallbackQueryHandler,
-        CommandHandler,
-        Filters,
-        MessageHandler,
-    )
+    CallbackContext,
+    CallbackQueryHandler,
+    CommandHandler,
+    Filters,
+    MessageHandler,
+)
 
 from telegram.ext.dispatcher import DispatcherHandlerStop
 from telegram.utils.helpers import escape_markdown
 
 from SaitamaRobot import (
-        ALLOW_EXCL,
-        CERT_PATH,
-        dispatcher,
-        DONATION_LINK,
-        LOGGER,
-        OWNER_USERID,
-        PORT,
-        StartTime,
-        SUPPORT_CHAT,
-        #telethn,
-        TELEGRAM_BOT_TOKEN,
-        updater,
-        URL,
-        WEBHOOK,
-    )
+    ALLOW_EXCL,
+    CERT_PATH,
+    dispatcher,
+    DONATION_LINK,
+    LOGGER,
+    OWNER_USERID,
+    PORT,
+    StartTime,
+    SUPPORT_CHAT,
+    # telethn,
+    TELEGRAM_BOT_TOKEN,
+    updater,
+    URL,
+    WEBHOOK,
+)
 
 from SaitamaRobot.modules import ALL_MODULES
 from SaitamaRobot.modules.helper_funcs.chat_status import is_user_admin
@@ -106,7 +106,8 @@ SAITAMA_IMG = "https://telegra.ph/file/0576731c890d2cf9cecce.jpg"
 
 if DONATION_LINK:
     DONATE_STRING = (
-        f"You can donate to the person currently running me [here]({DONATION_LINK})")
+        f"You can donate to the person currently running me [here]({DONATION_LINK})"
+    )
 else:
     DONATE_STRING = """Won't be necessary for now."""
 
@@ -670,9 +671,9 @@ def main():
         LOGGER.info("Using long polling.")
         updater.start_polling(timeout=15, read_latency=4, drop_pending_updates=True)
 
-    #if len(sys.argv) not in (1, 3, 4):
+    # if len(sys.argv) not in (1, 3, 4):
     #    telethn.disconnect()
-    #else:
+    # else:
     #    telethn.run_until_disconnected()
 
     updater.idle()
@@ -680,5 +681,5 @@ def main():
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded modules: " + str(ALL_MODULES))
-    #telethn.start(bot_token=TELEGRAM_BOT_TOKEN)
+    # telethn.start(bot_token=TELEGRAM_BOT_TOKEN)
     main()

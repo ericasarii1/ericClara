@@ -21,9 +21,9 @@ LOGGER = logging.getLogger(__name__)
 # Config
 TELEGRAM_BOT_TOKEN = env.get("TELEGRAM_BOT_TOKEN")
 
-config_file=Path(os.path.join(__name__, "config.yaml"))
-yaml=YAML(typ="safe")
-config_data=yaml.load(config_file) # look for ./crawl/config.yaml
+config_file = Path(os.path.join(__name__, "config.yaml"))
+yaml = YAML(typ="safe")
+config_data = yaml.load(config_file)  # look for ./crawl/config.yaml
 
 OWNER_USERID = int(config_data.get("OWNER_USERID"))
 OWNER_USERNAME = config_data.get("OWNER_USERNAME")
@@ -57,7 +57,7 @@ DEV_USERS.add(OWNER_USERID)
 updater = telegram.ext.Updater(TELEGRAM_BOT_TOKEN)
 dispatcher = updater.dispatcher
 
-#telethn = TelegramClient(
+# telethn = TelegramClient(
 #        "saitama",
 #        env.get("TELEGRAM_API_ID"), env.get("TELEGRAM_API_HASH"),
 #    )

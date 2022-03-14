@@ -21,7 +21,8 @@ from telegram import ParseMode, TelegramError, Update
 from telegram.ext import CallbackContext, CommandHandler
 from telegram.utils.helpers import mention_html
 
-#TODO: fix addsudo and removesudo
+# TODO: fix addsudo and removesudo
+
 
 def check_user_id(user_id: int, context: CallbackContext) -> Optional[str]:
     bot = context.bot
@@ -136,7 +137,6 @@ def removesudo(update: Update, context: CallbackContext) -> str:
     else:
         message.reply_text("This user is not a Dragon Disaster!")
         return ""
-
 
 
 @whitelist_plus
