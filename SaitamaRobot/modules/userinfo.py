@@ -21,8 +21,15 @@ async def get_id(_: Client, msg: Message) -> None:
             await msg.reply_text(f"{user.first_name}'s id is <code>{user.id}</code>")
             return
 
-    if msg.reply_to_message and (user := msg.reply_to_message.from_user):
-        await msg.reply_text(f"{user.first_name}'s id is <code>{user.id}</code>")
+    if reply := msg.reply_to_message:
+        if sender_name := reply.forward_sender_name:
+            if user := reply.forward_from:
+                await msg.reply_text(f"{user.first_name}'s id is <code>{user.id}</code>")
+            else:
+                await msg.reply_text(f"{sender_name}'s id is Hidden")
+        else:
+            if (user := msg.reply_to_message.from_user):
+                await msg.reply_text(f"{user.first_name}'s id is <code>{user.id}</code>")
     elif msg.chat.type == "private":
         await msg.reply_text(f"Your id is <code>{msg.chat.id}</code>.")
     else:
