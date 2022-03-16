@@ -11,8 +11,6 @@ from SaitamaRobot.modules.helper_funcs.pyro.entities import (
     iter_chat_entities,
 )
 
-# TODO: switch to aiogram later
-
 
 @pyrogram_app.on_message(filters.command("id", PREFIX))
 async def get_id(_: Client, msg: Message) -> None:
@@ -23,17 +21,21 @@ async def get_id(_: Client, msg: Message) -> None:
 
     if reply := msg.reply_to_message:
         if sender_name := reply.forward_sender_name:
-            if user := reply.forward_from:
-                await msg.reply_text(
-                    f"{user.first_name}'s id is <code>{user.id}</code>"
-                )
-            else:
-                await msg.reply_text(f"{sender_name}'s id is Hidden")
+            await msg.reply_text(
+                f"{sender_name}'s id is Hidden" \
+                f"\n{reply.from_user.first_name}'s id is <code>{reply.from_user.id}</code>"
+            )
+        elif user := reply.forward_from:
+            await msg.reply_text(
+                f"{user.first_name}'s id is <code>{user.id}</code>" \
+                f"\n{reply.from_user.first_name}'s id is <code>{reply.from_user.id}</code>"
+            )
         else:
-            if user := msg.reply_to_message.from_user:
-                await msg.reply_text(
-                    f"{user.first_name}'s id is <code>{user.id}</code>"
-                )
+            user = reply.from_user
+            await msg.reply_text(
+                f"{user.first_name}'s id is <code>{user.id}</code>"
+            )
+
     elif msg.chat.type == "private":
         await msg.reply_text(f"Your id is <code>{msg.chat.id}</code>.")
     else:
@@ -66,8 +68,8 @@ def ginfo_text(chat: Chat) -> str:
         text += f"\n<b>Scam</b>: {chat.is_scam}"
     if chat.is_fake:
         text += f"\n<b>Fake</b>: {chat.is_fake}"
-
-    text += f"\n<b>ChatPermissions</b>:\n{chat.permissions}"
+    if chat.permissions:
+        text += f"\n<b>ChatPermissions</b>:\n{chat.permissions}"
 
     return text
 
@@ -76,13 +78,15 @@ def ginfo_text(chat: Chat) -> str:
     filters.command("ginfo", PREFIX) & filters.user(list(DEV_USERS))
 )
 async def group_info(_: Client, msg: Message) -> None:
-    # Can use aioitertools.chain(iter_chat_entities(msg), [msg.chat])
     async for chat in iter_chat_entities(msg):
         if chat:
             await msg.reply_text(ginfo_text(chat))
             return
 
-    await msg.reply_text(ginfo_text(msg.chat))
+    if msg.reply_to_message and (chat := msg.reply_to_message.forward_from_chat):
+        await msg.reply_text(ginfo_text(chat))
+    else:
+        await msg.reply_text(ginfo_text(msg.chat))
 
 
 def info_text(user: User) -> str:
