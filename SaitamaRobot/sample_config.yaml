@@ -1,7 +1,7 @@
 ### IMPORTANT <<<starts here>>>
 
 # needed for any database modules
-SQLALCHEMY_DATABASE_URI: "postgresql://YOUR_USER:pw@localhost:5432/YOUR_DB_NAME"
+SQLALCHEMY_DATABASE_URI: 'postgresql://YOUR_USER:pw@localhost:5432/YOUR_DB_NAME'
 
 ## webhook <<<starts here>>>
 # https://core.telegram.org/bots/webhooks
@@ -27,7 +27,7 @@ BL_CHATS: []
 
 # Bot owner information
 OWNER_USERID: 1698923450
-OWNER_USERNAME: "devops117"
+OWNER_USERNAME: 'devops117'
 
 # List of ids - for developers who will have the same perms as the owner
 DEV_USERS: []
@@ -38,7 +38,7 @@ DRAGONS: []
 ### Users with supernatural powers <<<ends here>>>
 
 # Your own group for support, do not add the @
-SUPPORT_CHAT: "MissClaraSupport"
+SUPPORT_CHAT: 'MissClaraSupport'
 
 # Prints any new group the bot is added to, prints just the name and ID.
 JOIN_LOGGER: -1001253661229
@@ -58,12 +58,12 @@ DEL_CMDS: True
 ### API <<<starts here>>>
 
 # Get your API key from https://www.alphavantage.co/support/#api-key
-CASH_API_KEY: "awoo"
+CASH_API_KEY: 'awoo'
 
 # Get your API key from https://timezonedb.com/api
-TIME_API_KEY: "woof"
+TIME_API_KEY: 'woof'
 
 # For wallpapers, get one from https://wall.alphacoders.com/api.php
-WALL_API: "nyaa"
+WALL_API: 'nyaa'
 
 ### API <<<ends here>>>
