@@ -66,7 +66,6 @@ def ginfo_text(chat: Chat) -> str:
 )
 async def group_info(_: Client, msg: Message) -> None:
     # Can use aioitertools.chain(iter_chat_entities(msg), [msg.chat])
-    print("WDW")
     async for chat in iter_chat_entities(msg):
         if chat:
             await msg.reply_text(ginfo_text(chat))
