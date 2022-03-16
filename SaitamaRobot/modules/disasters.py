@@ -109,7 +109,6 @@ def removesupport(update: Update, context: CallbackContext) -> str:
         DRAGONS.remove(user_id)
         yaml.dump(config_data, config_file)
 
-
         log_message = (
             f"#UNSUPPORT\n"
             f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
@@ -231,11 +230,15 @@ Group admins/group owners do not need these commands.
 Visit @{SUPPORT_CHAT} for more information.
 """
 
-SUPPORT_HANDLER = CommandHandler(("addsupport", "adddragon"), addsupport, run_async=True)
+SUPPORT_HANDLER = CommandHandler(
+    ("addsupport", "adddragon"), addsupport, run_async=True
+)
 UNSUPPORT_HANDLER = CommandHandler(
     ("removesupport", "removedragon"), removesupport, run_async=True
 )
-SUPPORTLIST_HANDLER = CommandHandler(["supportlist", "dragons"], supportlist, run_async=True)
+SUPPORTLIST_HANDLER = CommandHandler(
+    ["supportlist", "dragons"], supportlist, run_async=True
+)
 DEVLIST_HANDLER = CommandHandler(["devlist", "heroes"], devlist, run_async=True)
 
 dispatcher.add_handler(SUPPORT_HANDLER)
