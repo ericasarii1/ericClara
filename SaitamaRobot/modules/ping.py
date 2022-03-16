@@ -6,7 +6,7 @@ from telegram import ParseMode, Update
 from telegram.ext import CallbackContext
 
 from SaitamaRobot import StartTime, dispatcher
-from SaitamaRobot.modules.helper_funcs.chat_status import sudo_plus
+from SaitamaRobot.modules.helper_funcs.chat_status import support_plus
 from SaitamaRobot.modules.disable import DisableAbleCommandHandler
 
 scrapper = cloudscraper.create_scraper()
@@ -70,7 +70,7 @@ def ping_func(to_ping: List[str]) -> List[str]:
     return ping_result
 
 
-@sudo_plus
+@support_plus
 def ping(update: Update, context: CallbackContext):
     msg = update.effective_message
 
@@ -88,7 +88,7 @@ def ping(update: Update, context: CallbackContext):
     )
 
 
-@sudo_plus
+@support_plus
 def pingall(update: Update, context: CallbackContext):
     to_ping = ["Kaizoku", "Kayo", "Telegram", "Jikan"]
     pinged_list = ping_func(to_ping)

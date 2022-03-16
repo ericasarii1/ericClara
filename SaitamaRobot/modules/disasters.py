@@ -1,9 +1,10 @@
 import html
-import json
-import os
 from typing import Optional
 
 from SaitamaRobot import (
+    config_data,
+    config_file,
+    yaml,
     DEV_USERS,
     OWNER_USERID,
     DRAGONS,
@@ -12,7 +13,6 @@ from SaitamaRobot import (
 )
 from SaitamaRobot.modules.helper_funcs.chat_status import (
     dev_plus,
-    sudo_plus,
     whitelist_plus,
 )
 from SaitamaRobot.modules.helper_funcs.extraction import extract_user
@@ -20,8 +20,6 @@ from SaitamaRobot.modules.log_channel import gloggable
 from telegram import ParseMode, TelegramError, Update
 from telegram.ext import CallbackContext, CommandHandler
 from telegram.utils.helpers import mention_html
-
-# TODO: fix addsudo and removesudo
 
 
 def check_user_id(user_id: int, context: CallbackContext) -> Optional[str]:
@@ -49,102 +47,91 @@ def check_user_id(user_id: int, context: CallbackContext) -> Optional[str]:
 ### Deep link example ends
 
 
-# @dev_plus
-# @gloggable
-# def addsudo(update: Update, context: CallbackContext) -> str:
-#    message = update.effective_message
-#    user = update.effective_user
-#    chat = update.effective_chat
-#    bot, args = context.bot, context.args
-#    user_id = extract_user(message, args)
-#    user_member = bot.getChat(user_id)
-#    rt = ""
-#
-#    reply = check_user_id(user_id, bot)
-#    if reply:
-#        message.reply_text(reply)
-#        return ""
-#
-#    with open(ELEVATED_USERS_FILE, "r") as infile:
-#        data = json.load(infile)
-#
-#    if user_id in DRAGONS:
-#        message.reply_text("This member is already a Dragon Disaster")
-#        return ""
-#
-#    data["sudos"].append(user_id)
-#    DRAGONS.append(user_id)
-#
-#    with open(ELEVATED_USERS_FILE, "w") as outfile:
-#        json.dump(data, outfile, indent=4)
-#
-#    update.effective_message.reply_text(
-#        rt
-#        + "\nSuccessfully set Disaster level of {} to Dragon!".format(
-#            user_member.first_name,
-#        ),
-#    )
-#
-#    log_message = (
-#        f"#SUDO\n"
-#        f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
-#        f"<b>User:</b> {mention_html(user_member.id, html.escape(user_member.first_name))}"
-#    )
-#
-#    if chat.type != "private":
-#        log_message = f"<b>{html.escape(chat.title)}:</b>\n" + log_message
-#
-#    return log_message
-#
-#
-# @dev_plus
-# @gloggable
-# def removesudo(update: Update, context: CallbackContext) -> str:
-#    message = update.effective_message
-#    user = update.effective_user
-#    chat = update.effective_chat
-#    bot, args = context.bot, context.args
-#    user_id = extract_user(message, args)
-#    user_member = bot.getChat(user_id)
-#
-#    reply = check_user_id(user_id, bot)
-#    if reply:
-#        message.reply_text(reply)
-#        return ""
-#
-#    with open(ELEVATED_USERS_FILE, "r") as infile:
-#        data = json.load(infile)
-#
-#    if user_id in DRAGONS:
-#        message.reply_text("Requested HA to demote this user to Civilian")
-#        DRAGONS.remove(user_id)
-#        data["sudos"].remove(user_id)
-#
-#        with open(ELEVATED_USERS_FILE, "w") as outfile:
-#            json.dump(data, outfile, indent=4)
-#
-#        log_message = (
-#            f"#UNSUDO\n"
-#            f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
-#            f"<b>User:</b> {mention_html(user_member.id, html.escape(user_member.first_name))}"
-#        )
-#
-#        if chat.type != "private":
-#            log_message = "<b>{}:</b>\n".format(html.escape(chat.title)) + log_message
-#
-#        return log_message
-#
-#    else:
-#        message.reply_text("This user is not a Dragon Disaster!")
-#        return ""
+@dev_plus
+@gloggable
+def addsupport(update: Update, context: CallbackContext) -> str:
+    message = update.effective_message
+    user = update.effective_user
+    chat = update.effective_chat
+    bot, args = context.bot, context.args
+    user_id = extract_user(message, args)
+    user_member = bot.getChat(user_id)
+    rt = ""
+
+    reply = check_user_id(user_id, bot)
+    if reply:
+        message.reply_text(reply)
+        return ""
+
+    if user_id in DRAGONS:
+        message.reply_text("This member is already a Dragon Disaster")
+        return ""
+
+    DRAGONS.add(user_id)
+    yaml.dump(config_data, config_file)
+
+    update.effective_message.reply_text(
+        rt
+        + "\nSuccessfully set Disaster level of {} to Dragon!".format(
+            user_member.first_name,
+        ),
+    )
+
+    log_message = (
+        f"#SUPPORT\n"
+        f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
+        f"<b>User:</b> {mention_html(user_member.id, html.escape(user_member.first_name))}"
+    )
+
+    if chat.type != "private":
+        log_message = f"<b>{html.escape(chat.title)}:</b>\n" + log_message
+
+    return log_message
+
+
+@dev_plus
+@gloggable
+def removesupport(update: Update, context: CallbackContext) -> str:
+    message = update.effective_message
+    user = update.effective_user
+    chat = update.effective_chat
+    bot, args = context.bot, context.args
+    user_id = extract_user(message, args)
+    user_member = bot.getChat(user_id)
+
+    reply = check_user_id(user_id, bot)
+    if reply:
+        message.reply_text(reply)
+        return ""
+
+    if user_id in DRAGONS:
+        message.reply_text("Requested HA to demote this user to Civilian")
+        DRAGONS.remove(user_id)
+        yaml.dump(config_data, config_file)
+
+
+        log_message = (
+            f"#UNSUPPORT\n"
+            f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
+            f"<b>User:</b> {mention_html(user_member.id, html.escape(user_member.first_name))}"
+        )
+
+        if chat.type != "private":
+            log_message = "<b>{}:</b>\n".format(html.escape(chat.title)) + log_message
+
+        return log_message
+
+    else:
+        message.reply_text("This user is not a Dragon Disaster!")
+        return ""
 
 
 @whitelist_plus
-def sudolist(update: Update, context: CallbackContext):
+def supportlist(update: Update, context: CallbackContext):
     bot = context.bot
-    true_sudo = DRAGONS
+    true_support = DRAGONS
     reply = "<b>Known Dragon Disasters 🐉:</b>\n"
-    for each_user in true_sudo:
+    for each_user in true_support:
         user_id = each_user
         try:
             user = bot.get_chat(user_id)
@@ -244,22 +231,22 @@ Group admins/group owners do not need these commands.
 Visit @{SUPPORT_CHAT} for more information.
 """
 
-# SUDO_HANDLER = CommandHandler(("addsudo", "adddragon"), addsudo, run_async=True)
-# UNSUDO_HANDLER = CommandHandler(
-#    ("removesudo", "removedragon"), removesudo, run_async=True
-# )
-SUDOLIST_HANDLER = CommandHandler(["sudolist", "dragons"], sudolist, run_async=True)
+SUPPORT_HANDLER = CommandHandler(("addsupport", "adddragon"), addsupport, run_async=True)
+UNSUPPORT_HANDLER = CommandHandler(
+    ("removesupport", "removedragon"), removesupport, run_async=True
+)
+SUPPORTLIST_HANDLER = CommandHandler(["supportlist", "dragons"], supportlist, run_async=True)
 DEVLIST_HANDLER = CommandHandler(["devlist", "heroes"], devlist, run_async=True)
 
-# dispatcher.add_handler(SUDO_HANDLER)
-# dispatcher.add_handler(UNSUDO_HANDLER)
-dispatcher.add_handler(SUDOLIST_HANDLER)
+dispatcher.add_handler(SUPPORT_HANDLER)
+dispatcher.add_handler(UNSUPPORT_HANDLER)
+dispatcher.add_handler(SUPPORTLIST_HANDLER)
 dispatcher.add_handler(DEVLIST_HANDLER)
 
 __mod_name__ = "Disasters"
 __handlers__ = [
-    #   SUDO_HANDLER,
-    #   UNSUDO_HANDLER,
-    SUDOLIST_HANDLER,
+    SUPPORT_HANDLER,
+    UNSUPPORT_HANDLER,
+    SUPPORTLIST_HANDLER,
     DEVLIST_HANDLER,
 ]

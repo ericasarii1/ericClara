@@ -4,11 +4,11 @@ from telegram.ext import MessageFilter
 
 
 class CustomFilters(object):
-    class _Sudoers(MessageFilter):
+    class _Support(MessageFilter):
         def filter(self, message: Message):
             return bool(message.from_user and message.from_user.id in DRAGONS)
 
-    sudo_filter = _Sudoers()
+    support_filter = _Support()
 
     class _Developers(MessageFilter):
         def filter(self, message: Message):

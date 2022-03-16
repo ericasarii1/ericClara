@@ -26,7 +26,7 @@ def is_support_plus(chat: Chat, user_id: int, member: ChatMember = None) -> bool
     return user_id in DRAGONS or user_id in DEV_USERS
 
 
-def is_sudo_plus(chat: Chat, user_id: int, member: ChatMember = None) -> bool:
+def is_support_plus(chat: Chat, user_id: int, member: ChatMember = None) -> bool:
     return user_id in DRAGONS or user_id in DEV_USERS
 
 
@@ -116,14 +116,14 @@ def dev_plus(func):
     return is_dev_plus_func
 
 
-def sudo_plus(func):
+def support_plus(func):
     @wraps(func)
-    def is_sudo_plus_func(update: Update, context: CallbackContext, *args, **kwargs):
+    def is_support_plus_func(update: Update, context: CallbackContext, *args, **kwargs):
         bot = context.bot
         user = update.effective_user
         chat = update.effective_chat
 
-        if user and is_sudo_plus(chat, user.id):
+        if user and is_support_plus(chat, user.id):
             return func(update, context, *args, **kwargs)
         elif not user:
             pass
@@ -137,7 +137,7 @@ def sudo_plus(func):
                 "Who dis non-admin telling me what to do? You want a punch?",
             )
 
-    return is_sudo_plus_func
+    return is_support_plus_func
 
 
 def support_plus(func):

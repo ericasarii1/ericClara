@@ -12,7 +12,7 @@ from telegram.ext import (
 
 import SaitamaRobot.modules.sql.users_sql as sql
 from SaitamaRobot import DEV_USERS, LOGGER, OWNER_USERID, dispatcher
-from SaitamaRobot.modules.helper_funcs.chat_status import dev_plus, sudo_plus
+from SaitamaRobot.modules.helper_funcs.chat_status import dev_plus, support_plus
 from SaitamaRobot.modules.sql.users_sql import get_all_users
 
 USERS_GROUP = 4
@@ -114,7 +114,7 @@ def log_user(update: Update, context: CallbackContext):
         sql.update_user(msg.forward_from.id, msg.forward_from.username)
 
 
-@sudo_plus
+@support_plus
 def chats(update: Update, context: CallbackContext):
     all_chats = sql.get_all_chats() or []
     chatfile = "List of chats.\n0. Chat name | Chat ID | Members count\n"
