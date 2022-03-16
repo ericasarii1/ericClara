@@ -27,12 +27,11 @@ async def iter_user_entities(msg: Message):
 
                 with suppress([UsernameNotOccupied, PeerIdInvalid]):
                     if user_url.startswith("https://t.me/"):
-                        username = '@' + user_url.removeprefix("https://t.me/")
+                        username = "@" + user_url.removeprefix("https://t.me/")
                         yield await pyrogram_app.get_chat(username)
                     elif user_url.startswith("t.me/"):
-                        username = '@' + user_url.removeprefix("t.me/")
+                        username = "@" + user_url.removeprefix("t.me/")
                         yield await pyrogram_app.get_chat(username)
-
 
 
 async def iter_chat_entities(msg: Message):
@@ -51,12 +50,12 @@ async def iter_chat_entities(msg: Message):
                 with suppress([UsernameNotOccupied, PeerIdInvalid]):
                     if chat_url.startswith("https://t.me/"):
                         path = chat_url.removeprefix("https://t.me/")
-                        if not (path.startswith("joinchat") or path.startswith('+')):
-                            username = '@' + path
+                        if not (path.startswith("joinchat") or path.startswith("+")):
+                            username = "@" + path
                             yield await pyrogram_app.get_chat(username)
 
                     elif chat_url.startswith("t.me/"):
                         path = chat_url.removeprefix("t.me/")
-                        if not (path.startswith("joinchat") or path.startswith('+')):
-                            username = '@' + path
+                        if not (path.startswith("joinchat") or path.startswith("+")):
+                            username = "@" + path
                             yield await pyrogram_app.get_chat(username)
