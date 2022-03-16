@@ -1,0 +1,3 @@
+from SaitamaRobot import DEV_USERS, DRAGONS
+
+IMMUNE_USERS = DRAGONS | DEV_USERS

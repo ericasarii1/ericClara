@@ -1,6 +1,5 @@
 import SaitamaRobot.modules.sql.blacklistusers_sql as sql
-from SaitamaRobot import ALLOW_EXCL
-from SaitamaRobot import DEV_USERS, DRAGONS
+from SaitamaRobot import PREFIX, DEV_USERS, DRAGONS
 
 from telegram import Update
 from telegram.ext import CommandHandler, MessageHandler, RegexHandler, Filters
@@ -11,11 +10,6 @@ from pyrate_limiter import (
     Limiter,
     MemoryListBucket,
 )
-
-if ALLOW_EXCL:
-    CMD_STARTERS = ("/", "!")
-else:
-    CMD_STARTERS = ("/",)
 
 
 class AntiSpam:
@@ -77,7 +71,7 @@ class CustomCommandHandler(CommandHandler):
             if message.text and len(message.text) > 1:
                 fst_word = message.text.split(None, 1)[0]
                 if len(fst_word) > 1 and any(
-                    fst_word.startswith(start) for start in CMD_STARTERS
+                    fst_word.startswith(start) for start in PREFIX
                 ):
 
                     args = message.text.split()[1:]

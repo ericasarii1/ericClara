@@ -5,7 +5,7 @@ from os import environ as env
 from ruamel.yaml import YAML
 
 import telegram.ext
-from telethon import TelegramClient
+from pyrogram import Client
 
 StartTime = time.time()
 
@@ -27,10 +27,11 @@ config_data = yaml.load(config_file)  # look for ./crawl/config.yaml
 
 OWNER_USERID = int(config_data.get("OWNER_USERID"))
 OWNER_USERNAME = config_data.get("OWNER_USERNAME")
+PREFIX = config_data.get("PREFIX")
 JOIN_LOGGER = config_data.get("JOIN_LOGGER")
 ALLOW_CHATS = config_data.get("ALLOW_CHATS")
-DEV_USERS = set(config_data.get("DEV_USERS") or [])
-DRAGONS = set(config_data.get("DRAGONS") or [])
+DEV_USERS = frozenset(config_data.get("DEV_USERS") or [] + [OWNER_USERID])
+DRAGONS = set(config_data.get("DRAGONS"))
 EVENT_LOGS = config_data.get("EVENT_LOGS")
 WEBHOOK = config_data.get("WEBHOOK")
 URL = config_data.get("URL")
@@ -44,23 +45,21 @@ DONATION_LINK = config_data.get("DONATION_LINK")
 LOAD = config_data.get("LOAD")
 NO_LOAD = config_data.get("NO_LOAD")
 DEL_CMDS = config_data.get("DEL_CMDS")
-ALLOW_EXCL = config_data.get("ALLOW_EXCL")
 CASH_API_KEY = config_data.get("CASH_API_KEY")
 TIME_API_KEY = config_data.get("TIME_API_KEY")
 WALL_API = config_data.get("WALL_API")
 SUPPORT_CHAT = config_data.get("SUPPORT_CHAT")
-INFOPIC = config_data.get("INFOPIC")
-
-BL_CHATS = set(config_data.get("BL_CHATS") or [])
-DEV_USERS.add(OWNER_USERID)
+BL_CHATS = frozenset(config_data.get("BL_CHATS") or [])
 
 updater = telegram.ext.Updater(TELEGRAM_BOT_TOKEN)
 dispatcher = updater.dispatcher
 
-# telethn = TelegramClient(
-#        "saitama",
-#        env.get("TELEGRAM_API_ID"), env.get("TELEGRAM_API_HASH"),
-#    )
+pyrogram_app = Client(
+    "clara",
+    env.get("TELEGRAM_API_ID"),
+    env.get("TELEGRAM_API_HASH"),
+    bot_token=env.get("TELEGRAM_BOT_TOKEN"),
+)
 
 # Load at end to ensure all prev variables have been set
 from SaitamaRobot.modules.helper_funcs.handlers import (

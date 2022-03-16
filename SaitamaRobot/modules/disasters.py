@@ -49,104 +49,100 @@ def check_user_id(user_id: int, context: CallbackContext) -> Optional[str]:
 ### Deep link example ends
 
 
-@dev_plus
-@gloggable
-def addsudo(update: Update, context: CallbackContext) -> str:
-    message = update.effective_message
-    user = update.effective_user
-    chat = update.effective_chat
-    bot, args = context.bot, context.args
-    user_id = extract_user(message, args)
-    user_member = bot.getChat(user_id)
-    rt = ""
-
-    reply = check_user_id(user_id, bot)
-    if reply:
-        message.reply_text(reply)
-        return ""
-
-    with open(ELEVATED_USERS_FILE, "r") as infile:
-        data = json.load(infile)
-
-    if user_id in DRAGONS:
-        message.reply_text("This member is already a Dragon Disaster")
-        return ""
-
-    data["sudos"].append(user_id)
-    DRAGONS.append(user_id)
-
-    with open(ELEVATED_USERS_FILE, "w") as outfile:
-        json.dump(data, outfile, indent=4)
-
-    update.effective_message.reply_text(
-        rt
-        + "\nSuccessfully set Disaster level of {} to Dragon!".format(
-            user_member.first_name,
-        ),
-    )
-
-    log_message = (
-        f"#SUDO\n"
-        f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
-        f"<b>User:</b> {mention_html(user_member.id, html.escape(user_member.first_name))}"
-    )
-
-    if chat.type != "private":
-        log_message = f"<b>{html.escape(chat.title)}:</b>\n" + log_message
-
-    return log_message
-
-
-@dev_plus
-@gloggable
-def removesudo(update: Update, context: CallbackContext) -> str:
-    message = update.effective_message
-    user = update.effective_user
-    chat = update.effective_chat
-    bot, args = context.bot, context.args
-    user_id = extract_user(message, args)
-    user_member = bot.getChat(user_id)
-
-    reply = check_user_id(user_id, bot)
-    if reply:
-        message.reply_text(reply)
-        return ""
-
-    with open(ELEVATED_USERS_FILE, "r") as infile:
-        data = json.load(infile)
-
-    if user_id in DRAGONS:
-        message.reply_text("Requested HA to demote this user to Civilian")
-        DRAGONS.remove(user_id)
-        data["sudos"].remove(user_id)
-
-        with open(ELEVATED_USERS_FILE, "w") as outfile:
-            json.dump(data, outfile, indent=4)
-
-        log_message = (
-            f"#UNSUDO\n"
-            f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
-            f"<b>User:</b> {mention_html(user_member.id, html.escape(user_member.first_name))}"
-        )
-
-        if chat.type != "private":
-            log_message = "<b>{}:</b>\n".format(html.escape(chat.title)) + log_message
-
-        return log_message
-
-    else:
-        message.reply_text("This user is not a Dragon Disaster!")
-        return ""
+# @dev_plus
+# @gloggable
+# def addsudo(update: Update, context: CallbackContext) -> str:
+#    message = update.effective_message
+#    user = update.effective_user
+#    chat = update.effective_chat
+#    bot, args = context.bot, context.args
+#    user_id = extract_user(message, args)
+#    user_member = bot.getChat(user_id)
+#    rt = ""
+#
+#    reply = check_user_id(user_id, bot)
+#    if reply:
+#        message.reply_text(reply)
+#        return ""
+#
+#    with open(ELEVATED_USERS_FILE, "r") as infile:
+#        data = json.load(infile)
+#
+#    if user_id in DRAGONS:
+#        message.reply_text("This member is already a Dragon Disaster")
+#        return ""
+#
+#    data["sudos"].append(user_id)
+#    DRAGONS.append(user_id)
+#
+#    with open(ELEVATED_USERS_FILE, "w") as outfile:
+#        json.dump(data, outfile, indent=4)
+#
+#    update.effective_message.reply_text(
+#        rt
+#        + "\nSuccessfully set Disaster level of {} to Dragon!".format(
+#            user_member.first_name,
+#        ),
+#    )
+#
+#    log_message = (
+#        f"#SUDO\n"
+#        f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
+#        f"<b>User:</b> {mention_html(user_member.id, html.escape(user_member.first_name))}"
+#    )
+#
+#    if chat.type != "private":
+#        log_message = f"<b>{html.escape(chat.title)}:</b>\n" + log_message
+#
+#    return log_message
+#
+#
+# @dev_plus
+# @gloggable
+# def removesudo(update: Update, context: CallbackContext) -> str:
+#    message = update.effective_message
+#    user = update.effective_user
+#    chat = update.effective_chat
+#    bot, args = context.bot, context.args
+#    user_id = extract_user(message, args)
+#    user_member = bot.getChat(user_id)
+#
+#    reply = check_user_id(user_id, bot)
+#    if reply:
+#        message.reply_text(reply)
+#        return ""
+#
+#    with open(ELEVATED_USERS_FILE, "r") as infile:
+#        data = json.load(infile)
+#
+#    if user_id in DRAGONS:
+#        message.reply_text("Requested HA to demote this user to Civilian")
+#        DRAGONS.remove(user_id)
+#        data["sudos"].remove(user_id)
+#
+#        with open(ELEVATED_USERS_FILE, "w") as outfile:
+#            json.dump(data, outfile, indent=4)
+#
+#        log_message = (
+#            f"#UNSUDO\n"
+#            f"<b>Admin:</b> {mention_html(user.id, html.escape(user.first_name))}\n"
+#            f"<b>User:</b> {mention_html(user_member.id, html.escape(user_member.first_name))}"
+#        )
+#
+#        if chat.type != "private":
+#            log_message = "<b>{}:</b>\n".format(html.escape(chat.title)) + log_message
+#
+#        return log_message
+#
+#    else:
+#        message.reply_text("This user is not a Dragon Disaster!")
+#        return ""
 
 
 @whitelist_plus
 def sudolist(update: Update, context: CallbackContext):
     bot = context.bot
-    m = update.effective_message.reply_text(
-        "<code>Gathering intel..</code>",
-        parse_mode=ParseMode.HTML,
-    )
-    true_sudo = DRAGONS - DEV_USERS
+    true_sudo = DRAGONS
     reply = "<b>Known Dragon Disasters 🐉:</b>\n"
     for each_user in true_sudo:
         user_id = each_user
@@ -155,17 +151,13 @@ def sudolist(update: Update, context: CallbackContext):
             reply += f"• {mention_html(user_id, html.escape(user.first_name))}\n"
         except TelegramError:
             pass
-    m.edit_text(reply, parse_mode=ParseMode.HTML)
+    update.effective_message.reply_text(reply, parse_mode=ParseMode.HTML)
 
 
 @whitelist_plus
 def devlist(update: Update, context: CallbackContext):
     bot = context.bot
-    m = update.effective_message.reply_text(
-        "<code>Gathering intel..</code>",
-        parse_mode=ParseMode.HTML,
-    )
-    true_dev = DEV_USERS - OWNER_USERID
+    true_dev = set(DEV_USERS).difference({OWNER_USERID})
     reply = "<b>Hero Association Members ⚡️:</b>\n"
     for each_user in true_dev:
         user_id = each_user
@@ -174,7 +166,7 @@ def devlist(update: Update, context: CallbackContext):
             reply += f"• {mention_html(user_id, html.escape(user.first_name))}\n"
         except TelegramError:
             pass
-    m.edit_text(reply, parse_mode=ParseMode.HTML)
+    update.effective_message.reply_text(reply, parse_mode=ParseMode.HTML)
 
 
 __help__ = f"""
@@ -252,22 +244,22 @@ Group admins/group owners do not need these commands.
 Visit @{SUPPORT_CHAT} for more information.
 """
 
-SUDO_HANDLER = CommandHandler(("addsudo", "adddragon"), addsudo, run_async=True)
-UNSUDO_HANDLER = CommandHandler(
-    ("removesudo", "removedragon"), removesudo, run_async=True
-)
+# SUDO_HANDLER = CommandHandler(("addsudo", "adddragon"), addsudo, run_async=True)
+# UNSUDO_HANDLER = CommandHandler(
+#    ("removesudo", "removedragon"), removesudo, run_async=True
+# )
 SUDOLIST_HANDLER = CommandHandler(["sudolist", "dragons"], sudolist, run_async=True)
 DEVLIST_HANDLER = CommandHandler(["devlist", "heroes"], devlist, run_async=True)
 
-dispatcher.add_handler(SUDO_HANDLER)
-dispatcher.add_handler(UNSUDO_HANDLER)
+# dispatcher.add_handler(SUDO_HANDLER)
+# dispatcher.add_handler(UNSUDO_HANDLER)
 dispatcher.add_handler(SUDOLIST_HANDLER)
 dispatcher.add_handler(DEVLIST_HANDLER)
 
 __mod_name__ = "Disasters"
 __handlers__ = [
-    SUDO_HANDLER,
-    UNSUDO_HANDLER,
+    #   SUDO_HANDLER,
+    #   UNSUDO_HANDLER,
     SUDOLIST_HANDLER,
     DEVLIST_HANDLER,
 ]

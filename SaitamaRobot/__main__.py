@@ -27,7 +27,7 @@ from telegram.ext.dispatcher import DispatcherHandlerStop
 from telegram.utils.helpers import escape_markdown
 
 from SaitamaRobot import (
-    ALLOW_EXCL,
+    PREFIX,
     CERT_PATH,
     dispatcher,
     DONATION_LINK,
@@ -36,7 +36,7 @@ from SaitamaRobot import (
     PORT,
     StartTime,
     SUPPORT_CHAT,
-    # telethn,
+    pyrogram_app,
     TELEGRAM_BOT_TOKEN,
     updater,
     URL,
@@ -95,11 +95,9 @@ Have a look at the following for an idea of some of the things I can help you wi
    • in a group: will redirect you to pm, with all that chat's settings.
 
 
-{}
 And the following:
 """.format(
-    dispatcher.bot.first_name,
-    "" if not ALLOW_EXCL else "\nAll commands can either be used with / or !.\n",
+    dispatcher.bot.first_name
 )
 
 SAITAMA_IMG = "https://telegra.ph/file/0576731c890d2cf9cecce.jpg"
@@ -631,7 +629,6 @@ def migrate_chats(update: Update, context: CallbackContext):
 
 def main():
 
-    #    test_handler = CommandHandler("test", test, run_async=True)
     start_handler = CommandHandler("start", start, run_async=True)
 
     help_handler = CommandHandler("help", get_help, run_async=True)
@@ -647,7 +644,6 @@ def main():
     donate_handler = CommandHandler("donate", donate, run_async=True)
     migrate_handler = MessageHandler(Filters.status_update.migrate, migrate_chats)
 
-    # dispatcher.add_handler(test_handler)
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(help_handler)
     dispatcher.add_handler(settings_handler)
@@ -669,17 +665,12 @@ def main():
 
     else:
         LOGGER.info("Using long polling.")
-        updater.start_polling(timeout=15, read_latency=4, drop_pending_updates=True)
+        updater.start_polling(drop_pending_updates=True)
 
-    # if len(sys.argv) not in (1, 3, 4):
-    #    telethn.disconnect()
-    # else:
-    #    telethn.run_until_disconnected()
-
+    pyrogram_app.run()
     updater.idle()
 
 
 if __name__ == "__main__":
     LOGGER.info("Successfully loaded modules: " + str(ALL_MODULES))
-    # telethn.start(bot_token=TELEGRAM_BOT_TOKEN)
     main()
