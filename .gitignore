@@ -1,7 +1,8 @@
 # Config files, logs and stuff
 config.yaml
-log.txt
 kangsticker.png
+log.txt
+temp.txt
 updates.txt
 
 # Session files
