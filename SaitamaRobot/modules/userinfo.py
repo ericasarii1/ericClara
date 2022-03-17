@@ -85,7 +85,9 @@ async def group_info(_: Client, msg: Message) -> None:
         if msg.reply_to_message and (chat := msg.reply_to_message.forward_from_chat):
             found_chat = chat
 
-    await msg.reply_text(ginfo_text(found_chat), disable_web_page_preview=True) # Invite links
+    await msg.reply_text(
+        ginfo_text(found_chat), disable_web_page_preview=True
+    )  # Invite links
 
 
 def info_text(user: User) -> str:
