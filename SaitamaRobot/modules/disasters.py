@@ -210,15 +210,9 @@ Group admins/group owners do not need these commands.
 Visit @{SUPPORT_CHAT} for more information.
 """
 
-SUPPORT_HANDLER = CommandHandler(
-    "addsupport", addsupport, run_async=True
-)
-UNSUPPORT_HANDLER = CommandHandler(
-    "removesupport", removesupport, run_async=True
-)
-SUPPORTLIST_HANDLER = CommandHandler(
-    "supportlist", supportlist, run_async=True
-)
+SUPPORT_HANDLER = CommandHandler("addsupport", addsupport, run_async=True)
+UNSUPPORT_HANDLER = CommandHandler("removesupport", removesupport, run_async=True)
+SUPPORTLIST_HANDLER = CommandHandler("supportlist", supportlist, run_async=True)
 DEVLIST_HANDLER = CommandHandler("devlist", devlist, run_async=True)
 
 dispatcher.add_handler(SUPPORT_HANDLER)
