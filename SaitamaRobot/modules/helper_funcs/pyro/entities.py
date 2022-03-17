@@ -34,7 +34,6 @@ async def iter_user_entities(msg: Message):
                         yield await pyrogram_app.get_chat(username)
 
 
-
 async def iter_chat_entities(msg: Message):
     """Get chats from message entities"""
     for entity in msg.entities:
