@@ -4,7 +4,7 @@ import random
 from typing import Optional
 
 import SaitamaRobot.modules.sql.notes_sql as sql
-from SaitamaRobot import LOGGER, JOIN_LOGGER, SUPPORT_CHAT, dispatcher, DRAGONS
+from SaitamaRobot import LOGGER, JOIN_LOGGER, SUPPORT_CHAT, dispatcher, SUPPORT_USERS
 from SaitamaRobot.modules.disable import DisableAbleCommandHandler
 from SaitamaRobot.modules.helper_funcs.handlers import MessageHandlerChecker
 from SaitamaRobot.modules.helper_funcs.chat_status import (
@@ -473,7 +473,7 @@ def clearall(update: Update, context: CallbackContext):
     chat = update.effective_chat
     user = update.effective_user
     member = chat.get_member(user.id)
-    if member.status != "creator" and user.id not in DRAGONS:
+    if member.status != "creator" and user.id not in SUPPORT_USERS:
         update.effective_message.reply_text(
             "Only the chat owner can clear all notes at once.",
         )
@@ -502,7 +502,7 @@ def clearall_btn(update: Update, context: CallbackContext):
     message = update.effective_message
     member = chat.get_member(query.from_user.id)
     if query.data == "notes_rmall":
-        if member.status == "creator" or query.from_user.id in DRAGONS:
+        if member.status == "creator" or query.from_user.id in SUPPORT_USERS:
             note_list = sql.get_all_chat_notes(chat.id)
             try:
                 for notename in note_list:
@@ -518,7 +518,7 @@ def clearall_btn(update: Update, context: CallbackContext):
         if member.status == "member":
             query.answer("You need to be admin to do this.")
     elif query.data == "notes_cancel":
-        if member.status == "creator" or query.from_user.id in DRAGONS:
+        if member.status == "creator" or query.from_user.id in SUPPORT_USERS:
             message.edit_text("Clearing of all notes has been cancelled.")
             return
         if member.status == "administrator":

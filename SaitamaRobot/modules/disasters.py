@@ -1,5 +1,6 @@
 import html
 from typing import Optional
+from contextlib import suppress
 
 from SaitamaRobot import (
     config_data,
@@ -7,7 +8,7 @@ from SaitamaRobot import (
     yaml,
     DEV_USERS,
     OWNER_USERID,
-    DRAGONS,
+    SUPPORT_USERS,
     SUPPORT_CHAT,
     dispatcher,
 )
@@ -63,11 +64,11 @@ def addsupport(update: Update, context: CallbackContext) -> str:
         message.reply_text(reply)
         return ""
 
-    if user_id in DRAGONS:
+    if user_id in SUPPORT_USERS:
         message.reply_text("This member is already a Dragon Disaster")
         return ""
 
-    DRAGONS.add(user_id)
+    SUPPORT_USERS.add(user_id)
     yaml.dump(config_data, config_file)
 
     update.effective_message.reply_text(
@@ -104,9 +105,9 @@ def removesupport(update: Update, context: CallbackContext) -> str:
         message.reply_text(reply)
         return ""
 
-    if user_id in DRAGONS:
+    if user_id in SUPPORT_USERS:
         message.reply_text("Requested HA to demote this user to Civilian")
-        DRAGONS.remove(user_id)
+        SUPPORT_USERS.remove(user_id)
         yaml.dump(config_data, config_file)
 
         log_message = (
@@ -128,15 +129,13 @@ def removesupport(update: Update, context: CallbackContext) -> str:
 @whitelist_plus
 def supportlist(update: Update, context: CallbackContext):
     bot = context.bot
-    true_support = DRAGONS
+    true_support = SUPPORT_USERS
     reply = "<b>Known Dragon Disasters 🐉:</b>\n"
-    for each_user in true_support:
+    for each_user in SUPPORT_USERS:
         user_id = each_user
-        try:
+        with suppress(TelegramError):
             user = bot.get_chat(user_id)
             reply += f"• {mention_html(user_id, html.escape(user.first_name))}\n"
-        except TelegramError:
-            pass
     update.effective_message.reply_text(reply, parse_mode=ParseMode.HTML)
 
 
@@ -147,11 +146,9 @@ def devlist(update: Update, context: CallbackContext):
     reply = "<b>Hero Association Members ⚡️:</b>\n"
     for each_user in true_dev:
         user_id = each_user
-        try:
+        with suppress(TelegramError):
             user = bot.get_chat(user_id)
             reply += f"• {mention_html(user_id, html.escape(user.first_name))}\n"
-        except TelegramError:
-            pass
     update.effective_message.reply_text(reply, parse_mode=ParseMode.HTML)
 
 
@@ -159,15 +156,6 @@ __help__ = f"""
 *⚠️ Notice:*
 Commands listed here only work for users with special access and are mainly used for troubleshooting, debugging purposes.
 Group admins/group owners do not need these commands.
-
- ╔ *List all special users:*
- ╠ `/dragons`*:* Lists all Dragon disasters
- ╠ `/demons`*:* Lists all Demon disasters
- ╠ `/tigers`*:* Lists all Tigers disasters
- ╠ `/wolves`*:* Lists all Wolf disasters
- ╠ `/heroes`*:* Lists all Hero Association members
- ╠ `/adddragon`*:* Adds a user to Dragon
- ╚ `Add dev doesnt exist, devs should know how to add themselves`
 
  ╔ *Ping:*
  ╠ `/ping`*:* gets ping time of bot to telegram server
@@ -208,15 +196,7 @@ Group admins/group owners do not need these commands.
  ╠ `/unload modulename`*:* Loads the said module from
  ╚   memory without restarting.memory without restarting the bot
 
- ╔ *Remote commands:*
- ╠ `/rban user group`*:* Remote ban
- ╠ `/runban user group`*:* Remote un-ban
- ╠ `/rpunch user group`*:* Remote punch
- ╠ `/rmute user group`*:* Remote mute
- ╚ `/runmute user group`*:* Remote un-mute
-
  ╔ *Debugging and Shell:*
- ╠ `/debug <on/off>`*:* Logs commands to updates.txt
  ╠ `/logs`*:* Run this in support group to get logs in pm
  ╠ `/eval`*:* Self explanatory
  ╠ `/sh`*:* Runs shell command
@@ -231,15 +211,15 @@ Visit @{SUPPORT_CHAT} for more information.
 """
 
 SUPPORT_HANDLER = CommandHandler(
-    ("addsupport", "adddragon"), addsupport, run_async=True
+    "addsupport", addsupport, run_async=True
 )
 UNSUPPORT_HANDLER = CommandHandler(
-    ("removesupport", "removedragon"), removesupport, run_async=True
+    "removesupport", removesupport, run_async=True
 )
 SUPPORTLIST_HANDLER = CommandHandler(
-    ["supportlist", "dragons"], supportlist, run_async=True
+    "supportlist", supportlist, run_async=True
 )
-DEVLIST_HANDLER = CommandHandler(["devlist", "heroes"], devlist, run_async=True)
+DEVLIST_HANDLER = CommandHandler("devlist", devlist, run_async=True)
 
 dispatcher.add_handler(SUPPORT_HANDLER)
 dispatcher.add_handler(UNSUPPORT_HANDLER)

@@ -9,7 +9,7 @@ from SaitamaRobot import (
     DEV_USERS,
     LOGGER,
     OWNER_USERID,
-    DRAGONS,
+    SUPPORT_USERS,
     dispatcher,
 )
 from SaitamaRobot.modules.disable import DisableAbleCommandHandler
@@ -63,7 +63,7 @@ def ban(update: Update, context: CallbackContext) -> str:
             message.reply_text("Trying to put me against a God level disaster huh?")
         elif user_id in DEV_USERS:
             message.reply_text("I can't act against our own.")
-        elif user_id in DRAGONS:
+        elif user_id in SUPPORT_USERS:
             message.reply_text(
                 "Fighting this Dragon here will put civilian lives at risk.",
             )
@@ -368,7 +368,7 @@ def selfunban(context: CallbackContext, update: Update) -> str:
     message = update.effective_message
     user = update.effective_user
     bot, args = context.bot, context.args
-    if user.id not in DRAGONS:
+    if user.id not in SUPPORT_USERS:
         return
 
     try:

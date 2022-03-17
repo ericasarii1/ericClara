@@ -32,8 +32,8 @@ OWNER_USERNAME: 'devops117'
 # List of ids - for developers who will have the same perms as the owner
 DEV_USERS: []
   
-# List of ids - for DRAGONS who can bypass a few admin checks
-DRAGONS: []
+# List of ids - for support users who can bypass a few admin checks
+SUPPORT_USERS: []
 
 ### Users with supernatural powers <<<ends here>>>
 

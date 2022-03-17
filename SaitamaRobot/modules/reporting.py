@@ -1,6 +1,6 @@
 import html
 
-from SaitamaRobot import LOGGER, DRAGONS, dispatcher
+from SaitamaRobot import LOGGER, SUPPORT_USERS, dispatcher
 from SaitamaRobot.modules.helper_funcs.chat_status import user_admin, user_not_admin
 from SaitamaRobot.modules.log_channel import loggable
 from SaitamaRobot.modules.sql import reporting_sql as sql
@@ -16,7 +16,7 @@ from telegram.ext import (
 from telegram.utils.helpers import mention_html
 
 REPORT_GROUP = 12
-REPORT_IMMUNE_USERS = DRAGONS
+REPORT_IMMUNE_USERS = SUPPORT_USERS
 
 
 @user_admin

@@ -1,13 +1,13 @@
 from pyrogram.types import Message
 
 from SaitamaRobot.modules.helper_funcs.pyro import IMMUNE_USERS
-from SaitamaRobot import DRAGONS
+from SaitamaRobot import SUPPORT_USERS
 
 ADMIN_STATUS = frozenset(["adminstrator", "creator"])
 
 
 async def is_user_admin(message: Message):
-    if message.chat.type == "private" or message.from_user.id in DRAGONS:
+    if message.chat.type == "private" or message.from_user.id in SUPPORT_USERS:
         return True
     if member := await message.chat.get_member(message.from_user.id):
         return member.status in ADMIN_STATUS

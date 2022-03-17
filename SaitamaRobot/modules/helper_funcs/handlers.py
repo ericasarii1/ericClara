@@ -1,5 +1,5 @@
 import SaitamaRobot.modules.sql.blacklistusers_sql as sql
-from SaitamaRobot import PREFIX, DEV_USERS, DRAGONS
+from SaitamaRobot import PREFIX, DEV_USERS, SUPPORT_USERS
 
 from telegram import Update
 from telegram.ext import CommandHandler, MessageHandler, RegexHandler, Filters
@@ -14,7 +14,7 @@ from pyrate_limiter import (
 
 class AntiSpam:
     def __init__(self):
-        self.whitelist = DEV_USERS | DRAGONS
+        self.whitelist = DEV_USERS | SUPPORT_USERS
         # Values are HIGHLY experimental, its recommended you pay attention to our commits as we will be adjusting the values over time with what suits best.
         Duration.CUSTOM = 15  # Custom duration, 15 seconds
         self.sec_limit = RequestRate(6, Duration.CUSTOM)  # 6 / Per 15 Seconds

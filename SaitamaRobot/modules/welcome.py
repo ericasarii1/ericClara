@@ -11,7 +11,7 @@ from SaitamaRobot import (
     DEV_USERS,
     LOGGER,
     OWNER_USERID,
-    DRAGONS,
+    SUPPORT_USERS,
     dispatcher,
     JOIN_LOGGER,
 )
@@ -210,7 +210,7 @@ def new_member(update: Update, context: CallbackContext):
                 continue
 
             # Welcome Sudos
-            elif new_mem.id in DRAGONS:
+            elif new_mem.id in SUPPORT_USERS:
                 update.effective_message.reply_text(
                     "Whoa! A Dragon disaster just joined! Stay Alert!",
                     reply_to_message_id=reply,

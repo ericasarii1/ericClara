@@ -1,4 +1,4 @@
-from SaitamaRobot import DEV_USERS, DRAGONS
+from SaitamaRobot import DEV_USERS, SUPPORT_USERS
 from telegram import Message
 from telegram.ext import MessageFilter
 
@@ -6,7 +6,7 @@ from telegram.ext import MessageFilter
 class CustomFilters(object):
     class _Support(MessageFilter):
         def filter(self, message: Message):
-            return bool(message.from_user and message.from_user.id in DRAGONS)
+            return bool(message.from_user and message.from_user.id in SUPPORT_USERS)
 
     support_filter = _Support()
 
