@@ -10,11 +10,8 @@ import SaitamaRobot
 from SaitamaRobot import (
     DEV_USERS,
     LOGGER,
-    OWNER_ID,
-    DRAGONS,
-    DEMONS,
-    TIGERS,
-    WOLVES,
+    OWNER_USERID,
+    SUPPORT_USERS,
     dispatcher,
     JOIN_LOGGER,
 )
@@ -187,7 +184,7 @@ def new_member(update: Update, context: CallbackContext):
                 reply = False
 
             # Give the owner a special welcome
-            if new_mem.id == OWNER_ID:
+            if new_mem.id == OWNER_USERID:
                 update.effective_message.reply_text(
                     "Oh, Genos? Let's get this moving.",
                     reply_to_message_id=reply,
@@ -213,7 +210,7 @@ def new_member(update: Update, context: CallbackContext):
                 continue
 
             # Welcome Sudos
-            elif new_mem.id in DRAGONS:
+            elif new_mem.id in SUPPORT_USERS:
                 update.effective_message.reply_text(
                     "Whoa! A Dragon disaster just joined! Stay Alert!",
                     reply_to_message_id=reply,
@@ -222,45 +219,6 @@ def new_member(update: Update, context: CallbackContext):
                     f"{html.escape(chat.title)}\n"
                     f"#USER_JOINED\n"
                     f"Bot Sudo just joined the group"
-                )
-                continue
-
-            # Welcome Support
-            elif new_mem.id in DEMONS:
-                update.effective_message.reply_text(
-                    "Huh! Someone with a Demon disaster level just joined!",
-                    reply_to_message_id=reply,
-                )
-                welcome_log = (
-                    f"{html.escape(chat.title)}\n"
-                    f"#USER_JOINED\n"
-                    f"Bot Support just joined the group"
-                )
-                continue
-
-            # Welcome Whitelisted
-            elif new_mem.id in TIGERS:
-                update.effective_message.reply_text(
-                    "Roar! A Tiger disaster just joined!",
-                    reply_to_message_id=reply,
-                )
-                welcome_log = (
-                    f"{html.escape(chat.title)}\n"
-                    f"#USER_JOINED\n"
-                    f"A whitelisted user joined the chat"
-                )
-                continue
-
-            # Welcome Tigers
-            elif new_mem.id in WOLVES:
-                update.effective_message.reply_text(
-                    "Awoo! A Wolf disaster just joined!",
-                    reply_to_message_id=reply,
-                )
-                welcome_log = (
-                    f"{html.escape(chat.title)}\n"
-                    f"#USER_JOINED\n"
-                    f"A whitelisted user joined the chat"
                 )
                 continue
 
@@ -589,7 +547,7 @@ def left_member(update: Update, context: CallbackContext):
                 return
 
             # Give the owner a special goodbye
-            if left_mem.id == OWNER_ID:
+            if left_mem.id == OWNER_USERID:
                 update.effective_message.reply_text(
                     "Oi! Genos! He left..",
                     reply_to_message_id=reply,

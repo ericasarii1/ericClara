@@ -9,7 +9,7 @@ from telegram.utils.helpers import mention_html
 from alphabet_detector import AlphabetDetector
 
 import SaitamaRobot.modules.sql.locks_sql as sql
-from SaitamaRobot import dispatcher, DRAGONS, LOGGER
+from SaitamaRobot import dispatcher, SUPPORT_USERS, LOGGER
 from SaitamaRobot.modules.disable import DisableAbleCommandHandler
 from SaitamaRobot.modules.helper_funcs.chat_status import (
     can_delete,
@@ -103,7 +103,7 @@ def restr_members(
     previews=False,
 ):
     for mem in members:
-        if mem.user in DRAGONS:
+        if mem.user in SUPPORT_USERS:
             pass
         try:
             bot.restrict_chat_member(

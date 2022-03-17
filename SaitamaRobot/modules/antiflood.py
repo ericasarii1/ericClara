@@ -4,7 +4,7 @@ import re
 
 from telegram import Message, Chat, Update, User, ChatPermissions
 
-from SaitamaRobot import TIGERS, WOLVES, dispatcher
+from SaitamaRobot import dispatcher
 from SaitamaRobot.modules.helper_funcs.chat_status import (
     bot_admin,
     is_user_admin,
@@ -39,7 +39,7 @@ def check_flood(update, context) -> str:
         return ""
 
     # ignore admins and whitelists
-    if is_user_admin(chat, user.id) or user.id in WOLVES or user.id in TIGERS:
+    if is_user_admin(chat, user.id):
         sql.update_flood(chat.id, None)
         return ""
     # ignore approved users

@@ -8,7 +8,7 @@ from telegram.error import BadRequest
 from telegram.ext import CommandHandler
 
 import SaitamaRobot.modules.sql.notes_sql as sql
-from SaitamaRobot import dispatcher, LOGGER, OWNER_ID, JOIN_LOGGER, SUPPORT_CHAT
+from SaitamaRobot import dispatcher, LOGGER, OWNER_USERID, JOIN_LOGGER, SUPPORT_CHAT
 from SaitamaRobot.__main__ import DATA_IMPORT
 from SaitamaRobot.modules.helper_funcs.chat_status import user_admin
 from SaitamaRobot.modules.helper_funcs.alternate import typing_action
@@ -157,10 +157,10 @@ def export_data(update, context):
             )
             return
         else:
-            if user.id != OWNER_ID:
+            if user.id != OWNER_USERID:
                 put_chat(chat_id, new_jam, chat_data)
     else:
-        if user.id != OWNER_ID:
+        if user.id != OWNER_USERID:
             put_chat(chat_id, new_jam, chat_data)
 
     note_list = sql.get_all_chat_notes(chat_id)

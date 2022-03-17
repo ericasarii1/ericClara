@@ -2,8 +2,8 @@ import importlib
 from typing import Union
 
 from future.utils import string_types
-from SaitamaRobot import dispatcher
-from SaitamaRobot.modules.helper_funcs.handlers import CMD_STARTERS, SpamChecker
+from SaitamaRobot import dispatcher, PREFIX
+from SaitamaRobot.modules.helper_funcs.handlers import SpamChecker
 from SaitamaRobot.modules.helper_funcs.misc import is_module_loaded
 from telegram import ParseMode, Update
 from telegram.ext import (
@@ -51,7 +51,7 @@ if is_module_loaded(FILENAME):
                 if message.text and len(message.text) > 1:
                     fst_word = message.text.split(None, 1)[0]
                     if len(fst_word) > 1 and any(
-                        fst_word.startswith(start) for start in CMD_STARTERS
+                        fst_word.startswith(start) for start in PREFIX
                     ):
                         args = message.text.split()[1:]
                         command = fst_word[1:].split("@")
@@ -136,7 +136,7 @@ if is_module_loaded(FILENAME):
         chat = update.effective_chat
         if len(args) >= 1:
             disable_cmd = args[0]
-            if disable_cmd.startswith(CMD_STARTERS):
+            if disable_cmd.startswith(PREFIX):
                 disable_cmd = disable_cmd[1:]
 
             if disable_cmd in set(DISABLE_CMDS + DISABLE_OTHER):
@@ -177,7 +177,7 @@ if is_module_loaded(FILENAME):
             failed_disabled_cmds = []
 
             for disable_cmd in command_list:
-                if disable_cmd.startswith(CMD_STARTERS):
+                if disable_cmd.startswith(PREFIX):
                     disable_cmd = disable_cmd[1:]
 
                 if disable_cmd in set(DISABLE_CMDS + DISABLE_OTHER):
@@ -210,7 +210,7 @@ if is_module_loaded(FILENAME):
         chat = update.effective_chat
         if len(args) >= 1:
             enable_cmd = args[0]
-            if enable_cmd.startswith(CMD_STARTERS):
+            if enable_cmd.startswith(PREFIX):
                 enable_cmd = enable_cmd[1:]
 
             if sql.enable_command(chat.id, enable_cmd):
@@ -251,7 +251,7 @@ if is_module_loaded(FILENAME):
             failed_enabled_cmds = []
 
             for enable_cmd in command_list:
-                if enable_cmd.startswith(CMD_STARTERS):
+                if enable_cmd.startswith(PREFIX):
                     enable_cmd = enable_cmd[1:]
 
                 if sql.enable_command(chat.id, enable_cmd):

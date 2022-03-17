@@ -26,14 +26,7 @@ from telegram.utils.helpers import escape_markdown
 from telegram.utils.helpers import mention_html
 from telegram.utils.helpers import mention_markdown
 
-from SaitamaRobot import DEMONS
-from SaitamaRobot import DEV_USERS
 from SaitamaRobot import dispatcher
-from SaitamaRobot import DRAGONS
-from SaitamaRobot import OWNER_ID
-from SaitamaRobot import TIGERS
-from SaitamaRobot import TOKEN
-from SaitamaRobot import WOLVES
 from SaitamaRobot.modules.disable import DisableAbleCommandHandler
 from SaitamaRobot.modules.helper_funcs.alternate import typing_action
 

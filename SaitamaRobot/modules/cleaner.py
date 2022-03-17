@@ -1,6 +1,6 @@
 import html
 
-from SaitamaRobot import ALLOW_EXCL, CustomCommandHandler, dispatcher
+from SaitamaRobot import PREFIX, CustomCommandHandler, dispatcher
 from SaitamaRobot.modules.disable import DisableAbleCommandHandler
 from SaitamaRobot.modules.helper_funcs.chat_status import (
     bot_can_delete,
@@ -17,7 +17,6 @@ from telegram.ext import (
     MessageHandler,
 )
 
-CMD_STARTERS = ("/", "!") if ALLOW_EXCL else "/"
 BLUE_TEXT_CLEAN_GROUP = 13
 CommandHandlerList = (CommandHandler, CustomCommandHandler, DisableAbleCommandHandler)
 command_list = [
@@ -48,9 +47,7 @@ def clean_blue_text_must_click(update: Update, context: CallbackContext):
     if chat.get_member(bot.id).can_delete_messages and sql.is_enabled(chat.id):
         fst_word = message.text.strip().split(None, 1)[0]
 
-        if len(fst_word) > 1 and any(
-            fst_word.startswith(start) for start in CMD_STARTERS
-        ):
+        if len(fst_word) > 1 and any(fst_word.startswith(start) for start in PREFIX):
 
             command = fst_word[1:].split("@")
             chat = update.effective_chat

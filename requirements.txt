@@ -1,4 +1,7 @@
 aiohttp>=2.2.5
+ruamel.yaml
+markdown2
+more_itertools
 alphabet_detector
 beautifulsoup4
 bleach
@@ -8,8 +11,6 @@ emoji
 feedparser
 future
 geopy
-git+https://github.com/starry69/python-markdown2.git
-#googletrans
 gpytranslate
 humanize
 jikanpy
@@ -27,7 +28,8 @@ requests
 speedtest-cli
 spongemock
 sqlalchemy==1.3.20
-telethon
+pyrogram
+tgcrypto
 ujson
 wikipedia
 zalgo-text

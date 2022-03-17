@@ -8,11 +8,8 @@ from telegram.utils.helpers import mention_html
 from SaitamaRobot import (
     DEV_USERS,
     LOGGER,
-    OWNER_ID,
-    DRAGONS,
-    DEMONS,
-    TIGERS,
-    WOLVES,
+    OWNER_USERID,
+    SUPPORT_USERS,
     dispatcher,
 )
 from SaitamaRobot.modules.disable import DisableAbleCommandHandler
@@ -62,24 +59,14 @@ def ban(update: Update, context: CallbackContext) -> str:
         return log_message
 
     if is_user_ban_protected(chat, user_id, member) and user not in DEV_USERS:
-        if user_id == OWNER_ID:
+        if user_id == OWNER_USERID:
             message.reply_text("Trying to put me against a God level disaster huh?")
         elif user_id in DEV_USERS:
             message.reply_text("I can't act against our own.")
-        elif user_id in DRAGONS:
+        elif user_id in SUPPORT_USERS:
             message.reply_text(
                 "Fighting this Dragon here will put civilian lives at risk.",
             )
-        elif user_id in DEMONS:
-            message.reply_text(
-                "Bring an order from Heroes association to fight a Demon disaster.",
-            )
-        elif user_id in TIGERS:
-            message.reply_text(
-                "Bring an order from Heroes association to fight a Tiger disaster.",
-            )
-        elif user_id in WOLVES:
-            message.reply_text("Wolf abilities make them ban immune!")
         else:
             message.reply_text("This user has immunity and cannot be banned.")
         return log_message
@@ -381,7 +368,7 @@ def selfunban(context: CallbackContext, update: Update) -> str:
     message = update.effective_message
     user = update.effective_user
     bot, args = context.bot, context.args
-    if user.id not in DRAGONS or user.id not in TIGERS:
+    if user.id not in SUPPORT_USERS:
         return
 
     try:

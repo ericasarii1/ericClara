@@ -1,0 +1,69 @@
+### IMPORTANT <<<starts here>>>
+
+# needed for any database modules
+SQLALCHEMY_DATABASE_URI: 'postgresql://YOUR_USER:pw@localhost:5432/YOUR_DB_NAME'
+
+## webhook <<<starts here>>>
+# https://core.telegram.org/bots/webhooks
+WEBHOOK: False
+CERT_PATH: False
+PORT: Null
+URL: Null
+## webhook <<<ends here>>>
+
+### IMPORTANT <<<ends here>>>
+
+# prefix for commands
+PREFIX: ['/', '!']
+
+# modules to load or not load
+LOAD: []
+NO_LOAD: []
+
+# List of groups that you want blacklisted.
+BL_CHATS: []
+
+### Users with supernatural powers <<<starts here>>>
+
+# Bot owner information
+OWNER_USERID: 1698923450
+OWNER_USERNAME: 'devops117'
+
+# List of ids - for developers who will have the same perms as the owner
+DEV_USERS: []
+  
+# List of ids - for support users who can bypass a few admin checks
+SUPPORT_USERS: []
+
+### Users with supernatural powers <<<ends here>>>
+
+# Your own group for support, do not add the @
+SUPPORT_CHAT: 'MissClaraSupport'
+
+# Prints any new group the bot is added to, prints just the name and ID.
+JOIN_LOGGER: -1001253661229
+
+# Prints information like dev user promotes
+EVENT_LOGS: -1001190806654
+
+# Allow chats other than pm
+ALLOW_CHATS: True
+
+# EG, google pay
+DONATION_LINK: Null
+
+# Delete commands that users dont have access to, like delete /ban if a non admin uses it.
+DEL_CMDS: True
+
+### API <<<starts here>>>
+
+# Get your API key from https://www.alphavantage.co/support/#api-key
+CASH_API_KEY: 'awoo'
+
+# Get your API key from https://timezonedb.com/api
+TIME_API_KEY: 'woof'
+
+# For wallpapers, get one from https://wall.alphacoders.com/api.php
+WALL_API: 'nyaa'
+
+### API <<<ends here>>>
