@@ -76,15 +76,16 @@ def ginfo_text(chat: Chat) -> str:
     filters.command("ginfo", PREFIX) & filters.user(list(DEV_USERS))
 )
 async def group_info(_: Client, msg: Message) -> None:
-    async for chat in iter_chat_entities(msg):
-        if chat:
-            await msg.reply_text(ginfo_text(chat))
-            return
+    found_chat = msg.chat
 
-    if msg.reply_to_message and (chat := msg.reply_to_message.forward_from_chat):
-        await msg.reply_text(ginfo_text(chat))
+    async for chat in iter_chat_entities(msg):
+        if found_chat := chat:
+            break
     else:
-        await msg.reply_text(ginfo_text(msg.chat))
+        if msg.reply_to_message and (chat := msg.reply_to_message.forward_from_chat):
+            found_chat = chat
+
+    await msg.reply_text(ginfo_text(found_chat), disable_web_page_preview=True) # Invite links
 
 
 def info_text(user: User) -> str:
@@ -108,15 +109,16 @@ def info_text(user: User) -> str:
 
 @pyrogram_app.on_message(filters.command("info", PREFIX))
 async def info(_: Client, msg: Message) -> None:
-    async for user in iter_user_entities(msg):
-        if user:
-            await msg.reply_text(info_text(user))
-            return
+    found_user = msg.from_user
 
-    if msg.reply_to_message:
-        await msg.reply_text(info_text(msg.reply_to_message.from_user))
+    async for user in iter_user_entities(msg):
+        if found_user := user:
+            break
     else:
-        await msg.reply_text(info_text(msg.from_user))
+        if reply := msg.reply_to_message:
+            found_user = reply.from_user
+
+    await msg.reply_text(info_text(found_user))
 
 
 @pyrogram_app.on_message(

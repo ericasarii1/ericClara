@@ -19,7 +19,7 @@ async def iter_user_entities(msg: Message):
 
             case "mention" | "phone_number":
                 userid = msg.text[entity.offset : entity.offset + entity.length]
-                with suppress([UsernameNotOccupied, PeerIdInvalid]):
+                with suppress(UsernameNotOccupied, PeerIdInvalid):
                     yield await pyrogram_app.get_users(userid)
 
             case "url":
@@ -34,6 +34,7 @@ async def iter_user_entities(msg: Message):
                         yield await pyrogram_app.get_chat(username)
 
 
+
 async def iter_chat_entities(msg: Message):
     """Get chats from message entities"""
     for entity in msg.entities:
@@ -41,21 +42,23 @@ async def iter_chat_entities(msg: Message):
 
             case "mention" | "phone_number":
                 chatid = msg.text[entity.offset : entity.offset + entity.length]
-                with suppress([UsernameNotOccupied, PeerIdInvalid]):
+                with suppress(UsernameNotOccupied, PeerIdInvalid):
                     yield await pyrogram_app.get_chat(chatid)
 
             case "url":
                 chat_url = msg.text[entity.offset : entity.offset + entity.length]
 
-                with suppress([UsernameNotOccupied, PeerIdInvalid]):
+                with suppress(UsernameNotOccupied, PeerIdInvalid):
                     if chat_url.startswith("https://t.me/"):
                         path = chat_url.removeprefix("https://t.me/")
+                        # BOT_METHOD_INVALID: can't deal with joinchat urls for now
                         if not (path.startswith("joinchat") or path.startswith("+")):
                             username = "@" + path
                             yield await pyrogram_app.get_chat(username)
 
                     elif chat_url.startswith("t.me/"):
                         path = chat_url.removeprefix("t.me/")
+                        # BOT_METHOD_INVALID: can't deal with joinchat urls for now
                         if not (path.startswith("joinchat") or path.startswith("+")):
                             username = "@" + path
                             yield await pyrogram_app.get_chat(username)
