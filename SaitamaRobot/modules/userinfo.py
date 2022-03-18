@@ -10,7 +10,6 @@ from SaitamaRobot import PREFIX, DEV_USERS, pyrogram_app
 from SaitamaRobot.__main__ import STATS
 from SaitamaRobot.modules.sql import afk_sql
 
-
 class UserNotChat(Exception):
     """Return Chat if User isn't there"""
 
@@ -23,6 +22,7 @@ def username_from_url(url: str):
         username = url.removeprefix("https://t.me/")
         if not (username.startswith("joinchat") or username.startswith("+")):
             return f"@{username}"
+
     elif url.startswith("t.me/"):
         username = url.removeprefix("t.me/")
         if not (username.startswith("joinchat") or username.startswith("+")):
@@ -36,12 +36,10 @@ async def user_from_userid(client: Client, userid: str):
     raise UserNotChat(chat)
 
 
-async def user_from_message(msg: Message, limit: int = 1):
+async def user_from_message(client: Client, msg: Message, limit: int = 1):
     """Get users from message entities and message itself"""
 
-    for entity in islice(
-        msg.entities, 1, limit + 1
-    ):  # start=1 to avoid bot_command entity, +1 because start=1
+    for entity in islice(msg.entities, 1, limit+1): # start=1 to avoid bot_command entity, +1 because start=1
         match entity.type:
 
             case "text_mention":
@@ -49,52 +47,72 @@ async def user_from_message(msg: Message, limit: int = 1):
 
             case "mention":
                 username = msg.text[entity.offset : entity.offset + entity.length]
-                if user := await user_from_userid(pyrogram_app, username):
-                    yield user
+                yield await user_from_userid(client, username)
 
             case "url":
                 user_url = msg.text[entity.offset : entity.offset + entity.length]
                 if username := username_from_url(user_url):
-                    if user := await user_from_userid(pyrogram_app, username):
-                        yield user
+                    yield await user_from_userid(client, username)
 
-    for userid in islice(
-        msg.text.split(None), 1, limit + 1
-    ):  # start=1 to avoid bot_command entity, +1 because start=1
-        if (userid.isalnum() and userid[0] == "-") or userid.isdigit():
-            if user := await user_from_userid(userid):
-                yield user
+    for userid in islice(msg.text.split(None), 1, limit+1): # start=1 to avoid bot_command entity, +1 because start=1
+        if (userid.startswith("-") and userid.removeprefix("-").isdigit()) or userid.isdigit():
+            yield await user_from_userid(client, userid)
 
 
-async def chat_from_message(msg: Message, limit: int = 1):
+async def chat_from_message(client: Client, msg: Message, limit: int = 1):
     """Get chats from message entities and message itself"""
-    for entity in islice(
-        msg.entities, 1, limit + 1
-    ):  # start=1 to avoid bot_command entity, +1 because start=1
+    for entity in islice(msg.entities, 1, limit+1): # start=1 to avoid bot_command entity, +1 because start=1
         match entity.type:
 
             case "mention":
                 username = msg.text[entity.offset : entity.offset + entity.length]
-                yield await pyrogram_app.get_chat(username)
+                yield await client.get_chat(username)
 
             case "url":
                 chat_url = msg.text[entity.offset : entity.offset + entity.length]
                 if username := username_from_url(chat_url):
-                    yield await pyrogram_app.get_chat(username)
+                    yield await client.get_chat(username)
 
-    for chatid in islice(
-        msg.text.split(None), 1, limit + 1
-    ):  # start=1 to avoid bot_command entity, +1 because start=1
-        if (chatid.isalnum() and chatid[0] == "-") or chatid.isdigit():
-            yield await pyrogram_app.get_chat(chatid)
+    for chatid in islice(msg.text.split(None), 1, limit+1): # start=1 to avoid bot_command entity, +1 because start=1
+        if (chatid.startswith("-") and chatid.removeprefix("-").isdigit()) or chatid.isdigit():
+            yield await client.get_chat(chatid)
 
 
 @pyrogram_app.on_message(filters.command("id", PREFIX))
-async def get_id(_: Client, msg: Message) -> None:
+async def get_id(client: Client, msg: Message) -> None:
     try:
-        async for user in user_from_message(msg):
-            await msg.reply_text(f"{user.first_name}'s id is <code>{user.id}</code>")
-            return
+        bot_command = msg.entities[0]
+
+        async for user in user_from_message(client, msg):
+            if user:
+                await msg.reply_text(f"{user.first_name}'s id is <code>{user.id}</code>")
+                break
+
+        else:
+            if reply := msg.reply_to_message:
+
+                if sender_name := reply.forward_sender_name:
+                    await msg.reply_text(
+                        f"{sender_name}'s id is Hidden"
+                        f"\n{reply.from_user.first_name}'s id is <code>{reply.from_user.id}</code>"
+                    )
+
+                elif user := reply.forward_from:
+                    await msg.reply_text(
+                        f"{user.first_name}'s id is <code>{user.id}</code>"
+                        f"\n{reply.from_user.first_name}'s id is <code>{reply.from_user.id}</code>"
+                    )
+
+                else:
+                    user = reply.from_user
+                    await msg.reply_text(f"{user.first_name}'s id is <code>{user.id}</code>")
+
+            elif len(msg.text) > bot_command.length:
+                await msg.reply_text(f"Invalid input.")
+                return
+
+            else:
+                await msg.reply_text(f"This group's id is <code>{msg.chat.id}</code>.")
 
     except UserNotChat as e:
         await msg.reply_text(f"{e.chat.title}'s id is <code>{e.chat.id}</code>")
@@ -102,23 +120,6 @@ async def get_id(_: Client, msg: Message) -> None:
     except (UsernameNotOccupied, PeerIdInvalid):
         await msg.reply_text(f"Invalid input.")
         return
-
-    if reply := msg.reply_to_message:
-        if sender_name := reply.forward_sender_name:
-            await msg.reply_text(
-                f"{sender_name}'s id is Hidden"
-                f"\n{reply.from_user.first_name}'s id is <code>{reply.from_user.id}</code>"
-            )
-        elif user := reply.forward_from:
-            await msg.reply_text(
-                f"{user.first_name}'s id is <code>{user.id}</code>"
-                f"\n{reply.from_user.first_name}'s id is <code>{reply.from_user.id}</code>"
-            )
-        else:
-            user = reply.from_user
-            await msg.reply_text(f"{user.first_name}'s id is <code>{user.id}</code>")
-    else:
-        await msg.reply_text(f"This group's id is <code>{msg.chat.id}</code>.")
 
 
 def ginfo_text(chat: Chat) -> str:
@@ -156,23 +157,26 @@ def ginfo_text(chat: Chat) -> str:
 @pyrogram_app.on_message(
     filters.command("ginfo", PREFIX) & filters.user(list(DEV_USERS))
 )
-async def group_info(_: Client, msg: Message) -> None:
+async def group_info(client: Client, msg: Message) -> None:
     try:
-        async for chat in chat_from_message(msg):
-            await msg.reply_text(
-                ginfo_text(chat), disable_web_page_preview=True
-            )  # Invite links
-            return
+        bot_command = msg.entities[0]
+
+        async for chat in chat_from_message(client, msg):
+            if chat:
+                await msg.reply_text(ginfo_text(chat), disable_web_page_preview=True) # Invite links
+                break
+
         else:
-            if msg.reply_to_message and (
-                chat := msg.reply_to_message.forward_from_chat
-            ):
-                chat = chat
+            if msg.reply_to_message and msg.reply_to_message.forward_from_chat:
+                chat = msg.reply_to_message.forward_from_chat
+            elif len(msg.text) > bot_command.length:
+                await msg.reply_text(f"Invalid input.")
+                return
             else:
                 chat = msg.chat
-            await msg.reply_text(
-                ginfo_text(chat), disable_web_page_preview=True
-            )  # Invite links
+
+            await msg.reply_text(ginfo_text(chat), disable_web_page_preview=True) # Invite links
+
     except (UsernameNotOccupied, PeerIdInvalid):
         await msg.reply_text("Invalid input.")
         return
@@ -198,20 +202,27 @@ def info_text(user: User) -> str:
 
 
 @pyrogram_app.on_message(filters.command("info", PREFIX))
-async def info(_: Client, msg: Message) -> None:
-
+async def info(client: Client, msg: Message) -> None:
     try:
-        async for user in user_from_message(msg):
-            await msg.reply_text(info_text(user))
-            return
+        bot_command = msg.entities[0]
+
+        async for user in user_from_message(client, msg):
+            if user:
+                await msg.reply_text(info_text(user))
+                break
+
         else:
             if reply := msg.reply_to_message:
                 user = reply.from_user
+            elif len(msg.text) > bot_command.length:
+                await msg.reply_text(f"Invalid input.")
+                return
             else:
                 user = msg.from_user
             await msg.reply_text(info_text(user))
+
     except UserNotChat:
-        await msg.reply_text("/info doesn't support group/channel info.")
+        await msg.reply_text("/info doesn't support group/channel.")
     except (UsernameNotOccupied, PeerIdInvalid):
         await msg.reply_text("Invalid input.")
 
