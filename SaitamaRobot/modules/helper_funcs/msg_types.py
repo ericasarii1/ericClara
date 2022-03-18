@@ -41,7 +41,11 @@ def get_note_type(msg: Message):
             data_type = Types.TEXT
 
     elif msg.reply_to_message:
-        entities = msg.reply_to_message.parse_caption_entities() if msg.reply_to_message.caption else msg.reply_to_message.parse_entities()
+        entities = (
+            msg.reply_to_message.parse_caption_entities()
+            if msg.reply_to_message.caption
+            else msg.reply_to_message.parse_entities()
+        )
         msgtext = msg.reply_to_message.text or msg.reply_to_message.caption
         if len(args) >= 2 and msg.reply_to_message.text:  # not caption, text
             text, buttons = button_markdown_parser(msgtext, entities=entities)
