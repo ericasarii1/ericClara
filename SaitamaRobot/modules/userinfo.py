@@ -10,6 +10,7 @@ from SaitamaRobot import PREFIX, DEV_USERS, pyrogram_app
 from SaitamaRobot.__main__ import STATS
 from SaitamaRobot.modules.sql import afk_sql
 
+
 class UserNotChat(Exception):
     """Return Chat if User isn't there"""
 
@@ -39,7 +40,9 @@ async def user_from_userid(client: Client, userid: str):
 async def user_from_message(client: Client, msg: Message, limit: int = 1):
     """Get users from message entities and message itself"""
 
-    for entity in islice(msg.entities, 1, limit+1): # start=1 to avoid bot_command entity, +1 because start=1
+    for entity in islice(
+        msg.entities, 1, limit + 1
+    ):  # start=1 to avoid bot_command entity, +1 because start=1
         match entity.type:
 
             case "text_mention":
@@ -54,14 +57,20 @@ async def user_from_message(client: Client, msg: Message, limit: int = 1):
                 if username := username_from_url(user_url):
                     yield await user_from_userid(client, username)
 
-    for userid in islice(msg.text.split(None), 1, limit+1): # start=1 to avoid bot_command entity, +1 because start=1
-        if (userid.startswith("-") and userid.removeprefix("-").isdigit()) or userid.isdigit():
+    for userid in islice(
+        msg.text.split(None), 1, limit + 1
+    ):  # start=1 to avoid bot_command entity, +1 because start=1
+        if (
+            userid.startswith("-") and userid.removeprefix("-").isdigit()
+        ) or userid.isdigit():
             yield await user_from_userid(client, userid)
 
 
 async def chat_from_message(client: Client, msg: Message, limit: int = 1):
     """Get chats from message entities and message itself"""
-    for entity in islice(msg.entities, 1, limit+1): # start=1 to avoid bot_command entity, +1 because start=1
+    for entity in islice(
+        msg.entities, 1, limit + 1
+    ):  # start=1 to avoid bot_command entity, +1 because start=1
         match entity.type:
 
             case "mention":
@@ -73,8 +82,12 @@ async def chat_from_message(client: Client, msg: Message, limit: int = 1):
                 if username := username_from_url(chat_url):
                     yield await client.get_chat(username)
 
-    for chatid in islice(msg.text.split(None), 1, limit+1): # start=1 to avoid bot_command entity, +1 because start=1
-        if (chatid.startswith("-") and chatid.removeprefix("-").isdigit()) or chatid.isdigit():
+    for chatid in islice(
+        msg.text.split(None), 1, limit + 1
+    ):  # start=1 to avoid bot_command entity, +1 because start=1
+        if (
+            chatid.startswith("-") and chatid.removeprefix("-").isdigit()
+        ) or chatid.isdigit():
             yield await client.get_chat(chatid)
 
 
@@ -85,7 +98,9 @@ async def get_id(client: Client, msg: Message) -> None:
 
         async for user in user_from_message(client, msg):
             if user:
-                await msg.reply_text(f"{user.first_name}'s id is <code>{user.id}</code>")
+                await msg.reply_text(
+                    f"{user.first_name}'s id is <code>{user.id}</code>"
+                )
                 break
 
         else:
@@ -105,7 +120,9 @@ async def get_id(client: Client, msg: Message) -> None:
 
                 else:
                     user = reply.from_user
-                    await msg.reply_text(f"{user.first_name}'s id is <code>{user.id}</code>")
+                    await msg.reply_text(
+                        f"{user.first_name}'s id is <code>{user.id}</code>"
+                    )
 
             elif len(msg.text) > bot_command.length:
                 await msg.reply_text(f"Invalid input.")
@@ -163,7 +180,9 @@ async def group_info(client: Client, msg: Message) -> None:
 
         async for chat in chat_from_message(client, msg):
             if chat:
-                await msg.reply_text(ginfo_text(chat), disable_web_page_preview=True) # Invite links
+                await msg.reply_text(
+                    ginfo_text(chat), disable_web_page_preview=True
+                )  # Invite links
                 break
 
         else:
@@ -175,7 +194,9 @@ async def group_info(client: Client, msg: Message) -> None:
             else:
                 chat = msg.chat
 
-            await msg.reply_text(ginfo_text(chat), disable_web_page_preview=True) # Invite links
+            await msg.reply_text(
+                ginfo_text(chat), disable_web_page_preview=True
+            )  # Invite links
 
     except (UsernameNotOccupied, PeerIdInvalid):
         await msg.reply_text("Invalid input.")
