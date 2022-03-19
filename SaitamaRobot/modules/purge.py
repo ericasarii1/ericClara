@@ -49,7 +49,6 @@ async def delete(_: Client, msg: Message) -> None:
         await msg.reply_text("Reply the command to some message.")
 
 
-
 __help__ = """
 Deleting a selected amount of messages are easy with this command. \
 Bot purges messages all together or individually.
