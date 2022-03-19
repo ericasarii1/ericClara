@@ -40,11 +40,22 @@ async def purge(client: Client, msg: Message):
         )
 
 
+@pyrogram_app.on_message(filters.command("del", PREFIX))
+async def delete(_: Client, msg: Message) -> None:
+    if is_user_admin(msg) and (reply := msg.reply_to_message):
+        await reply.delete()
+        await msg.delete()
+    else:
+        await msg.reply_text("Reply the command to some message.")
+
+
+
 __help__ = """
 Deleting a selected amount of messages are easy with this command. \
 Bot purges messages all together or individually.
 *Admin only:*
  × /purge: Deletes all messages between this and the replied to message.
+ × /del: Deletes the messages replied to.
 """
 
 __mod_name__ = "Purge"
