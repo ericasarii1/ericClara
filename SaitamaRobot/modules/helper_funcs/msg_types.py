@@ -45,7 +45,10 @@ def get_note_type(msg: Message):
             if msg.reply_to_message.caption
             else msg.reply_to_message.parse_entities()
         )
-        msgtext = msg.reply_to_message.text_markdown_urled or msg.reply_to_message.caption_markdown_urled
+        msgtext = (
+            msg.reply_to_message.text_markdown_urled
+            or msg.reply_to_message.caption_markdown_urled
+        )
 
         if len(args) >= 2 and msg.reply_to_message.text:  # not caption, text
             text, buttons = button_markdown_parser(msgtext)
@@ -146,7 +149,9 @@ def get_welcome_type(msg: Message):
     if args:
         if msg.reply_to_message:
             argumen = (
-                msg.reply_to_message.caption_markdown_urled if msg.reply_to_message.caption_markdown_urled else ""
+                msg.reply_to_message.caption_markdown_urled
+                if msg.reply_to_message.caption_markdown_urled
+                else ""
             )
             offset = 0  # offset is no need since target was in reply
         else:

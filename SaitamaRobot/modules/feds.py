@@ -1291,7 +1291,9 @@ def fed_broadcast(update: Update, context: CallbackContext):
             return
         # Parsing md
         try:
-            raw_text = msg.text_markdown_urled.split(None, 1)  # use python's maxsplit to separate cmd and args
+            raw_text = msg.text_markdown_urled.split(
+                None, 1
+            )  # use python's maxsplit to separate cmd and args
         except ValueError as e:
             if "Nested entities are not supported for Markdown version 1" in e.args:
                 msg.reply_text("Nested entities are currently not supported.")
