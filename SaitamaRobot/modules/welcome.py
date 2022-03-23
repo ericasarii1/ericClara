@@ -23,7 +23,6 @@ from SaitamaRobot.modules.helper_funcs.misc import build_keyboard, revert_button
 from SaitamaRobot.modules.helper_funcs.msg_types import get_welcome_type
 from SaitamaRobot.modules.helper_funcs.string_handling import (
     escape_invalid_curly_brackets,
-    markdown_parser,
 )
 from SaitamaRobot.modules.log_channel import loggable
 from telegram import (
@@ -97,29 +96,23 @@ def send(update, message, keyboard, backup_message):
             )
         elif excp.message == "Button_url_invalid":
             msg = update.effective_message.reply_text(
-                markdown_parser(
-                    backup_message + "\nNote: the current message has an invalid url "
-                    "in one of its buttons. Please update.",
-                ),
+                backup_message + "\nNote: the current message has an invalid url "
+                "in one of its buttons. Please update.",
                 parse_mode=ParseMode.MARKDOWN,
                 reply_to_message_id=reply,
             )
         elif excp.message == "Unsupported url protocol":
             msg = update.effective_message.reply_text(
-                markdown_parser(
-                    backup_message + "\nNote: the current message has buttons which "
-                    "use url protocols that are unsupported by "
-                    "telegram. Please update.",
-                ),
+                backup_message + "\nNote: the current message has buttons which "
+                "use url protocols that are unsupported by "
+                "telegram. Please update.",
                 parse_mode=ParseMode.MARKDOWN,
                 reply_to_message_id=reply,
             )
         elif excp.message == "Wrong url host":
             msg = update.effective_message.reply_text(
-                markdown_parser(
-                    backup_message + "\nNote: the current message has some bad urls. "
-                    "Please update.",
-                ),
+                backup_message + "\nNote: the current message has some bad urls. "
+                "Please update.",
                 parse_mode=ParseMode.MARKDOWN,
                 reply_to_message_id=reply,
             )
@@ -130,10 +123,8 @@ def send(update, message, keyboard, backup_message):
             return
         else:
             msg = update.effective_message.reply_text(
-                markdown_parser(
-                    backup_message + "\nNote: An error occured when sending the "
-                    "custom message. Please update.",
-                ),
+                backup_message + "\nNote: An error occured when sending the "
+                "custom message. Please update.",
                 parse_mode=ParseMode.MARKDOWN,
                 reply_to_message_id=reply,
             )

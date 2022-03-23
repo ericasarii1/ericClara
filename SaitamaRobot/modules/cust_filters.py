@@ -105,9 +105,14 @@ def filters(update, context):
     chat = update.effective_chat
     user = update.effective_user
     msg = update.effective_message
-    args = msg.text.split(
-        None, 1
-    )  # use python's maxsplit to separate Cmd, keyword, and reply_text
+    try:
+        args = msg.text_markdown_urled.split(
+            None, 1
+        )  # use python's maxsplit to separate Cmd, keyword, and reply_text
+    except ValueError as e:
+        if "Nested entities are not supported for Markdown version 1" in e.args:
+            msg.reply_text("Nested entities are currently not supported.")
+
 
     conn = connected(context.bot, update, chat, user.id)
     if not conn is False:
@@ -155,7 +160,7 @@ def filters(update, context):
             msg.text
         )  # set correct offset relative to command + notename
         text, buttons = button_markdown_parser(
-            extracted[1], entities=msg.parse_entities(), offset=offset
+            extracted[1][offset:]
         )
         text = text.strip()
         if not text:
@@ -166,17 +171,22 @@ def filters(update, context):
             return
 
     elif msg.reply_to_message and len(args) >= 2:
-        if msg.reply_to_message.text:
-            text_to_parsing = msg.reply_to_message.text
-        elif msg.reply_to_message.caption:
-            text_to_parsing = msg.reply_to_message.caption
-        else:
-            text_to_parsing = ""
+        try:
+            if msg.reply_to_message.text:
+                text_to_parsing = msg.reply_to_message.text_markdown_urled
+            elif msg.reply_to_message.caption:
+                text_to_parsing = msg.reply_to_message.caption_markdown_urled
+            else:
+                text_to_parsing = ""
+        except ValueError as e:
+            if "Nested entities are not supported for Markdown version 1" in e.args:
+                msg.reply_text("Nested entities are currently not supported.")
+
         offset = len(
             text_to_parsing
         )  # set correct offset relative to command + notename
         text, buttons = button_markdown_parser(
-            text_to_parsing, entities=msg.parse_entities(), offset=offset
+            text_to_parsing[offset:]
         )
         text = text.strip()
 
@@ -188,17 +198,22 @@ def filters(update, context):
         return
 
     elif msg.reply_to_message:
-        if msg.reply_to_message.text:
-            text_to_parsing = msg.reply_to_message.text
-        elif msg.reply_to_message.caption:
-            text_to_parsing = msg.reply_to_message.caption
-        else:
-            text_to_parsing = ""
+        try:
+            if msg.reply_to_message.text:
+                text_to_parsing = msg.reply_to_message.text_markdown_urled
+            elif msg.reply_to_message.caption:
+                text_to_parsing = msg.reply_to_message.caption_markdown_urled
+            else:
+                text_to_parsing = ""
+        except ValueError as e:
+            if "Nested entities are not supported for Markdown version 1" in e.args:
+                msg.reply_text("Nested entities are currently not supported.")
+
         offset = len(
             text_to_parsing
         )  # set correct offset relative to command + notename
         text, buttons = button_markdown_parser(
-            text_to_parsing, entities=msg.parse_entities(), offset=offset
+            text_to_parsing[offset:]
         )
         text = text.strip()
         if (msg.reply_to_message.text or msg.reply_to_message.caption) and not text:

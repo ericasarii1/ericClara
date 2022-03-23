@@ -3,7 +3,6 @@ from typing import Optional
 import SaitamaRobot.modules.sql.rules_sql as sql
 from SaitamaRobot import dispatcher
 from SaitamaRobot.modules.helper_funcs.chat_status import user_admin
-from SaitamaRobot.modules.helper_funcs.string_handling import markdown_parser
 from telegram import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
@@ -95,17 +94,15 @@ def send_rules(update, chat_id, from_pm=False):
 def set_rules(update: Update, context: CallbackContext):
     chat_id = update.effective_chat.id
     msg = update.effective_message  # type: Optional[Message]
-    raw_text = msg.text
+    try:
+        raw_text = msg.text_markdown_urled
+    except ValueError as e:
+        if "Nested entities are not supported for Markdown version 1" in e.args:
+            msg.reply_text("Nested entities are currently not supported.")
+
     args = raw_text.split(None, 1)  # use python's maxsplit to separate cmd and args
     if len(args) == 2:
-        txt = args[1]
-        offset = len(txt) - len(raw_text)  # set correct offset relative to command
-        markdown_rules = markdown_parser(
-            txt,
-            entities=msg.parse_entities(),
-            offset=offset,
-        )
-
+        markdown_rules = args[1]
         sql.set_rules(chat_id, markdown_rules)
         update.effective_message.reply_text("Successfully set rules for this group.")
 
