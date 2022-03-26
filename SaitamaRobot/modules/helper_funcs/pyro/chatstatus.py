@@ -1,9 +1,8 @@
 from pyrogram.types import Message
 
-from SaitamaRobot.modules.helper_funcs.pyro import IMMUNE_USERS
 from SaitamaRobot import SUPPORT_USERS
 
-ADMIN_STATUS = frozenset(["adminstrator", "creator"])
+ADMIN_STATUS = frozenset(["administrator", "creator"])
 
 
 async def is_user_admin(message: Message):
