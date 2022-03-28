@@ -113,6 +113,7 @@ def filters(update, context):
         if "Nested entities are not supported for Markdown version 1" in e.args:
             msg.reply_text("Nested entities are currently not supported.")
 
+
     conn = connected(context.bot, update, chat, user.id)
     if not conn is False:
         chat_id = conn
@@ -158,7 +159,9 @@ def filters(update, context):
         offset = len(extracted[1]) - len(
             msg.text
         )  # set correct offset relative to command + notename
-        text, buttons = button_markdown_parser(extracted[1][offset:])
+        text, buttons = button_markdown_parser(
+            extracted[1][offset:]
+        )
         text = text.strip()
         if not text:
             send_message(
@@ -182,7 +185,9 @@ def filters(update, context):
         offset = len(
             text_to_parsing
         )  # set correct offset relative to command + notename
-        text, buttons = button_markdown_parser(text_to_parsing[offset:])
+        text, buttons = button_markdown_parser(
+            text_to_parsing[offset:]
+        )
         text = text.strip()
 
     elif not text and not file_type:
@@ -207,7 +212,9 @@ def filters(update, context):
         offset = len(
             text_to_parsing
         )  # set correct offset relative to command + notename
-        text, buttons = button_markdown_parser(text_to_parsing[offset:])
+        text, buttons = button_markdown_parser(
+            text_to_parsing[offset:]
+        )
         text = text.strip()
         if (msg.reply_to_message.text or msg.reply_to_message.caption) and not text:
             send_message(
