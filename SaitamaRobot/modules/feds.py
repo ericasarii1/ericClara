@@ -24,6 +24,7 @@ from SaitamaRobot.modules.helper_funcs.extraction import (
     extract_user,
     extract_user_fban,
 )
+from SaitamaRobot.modules.helper_funcs.string_handling import markdown_parser
 from telegram import (
     InlineKeyboardButton,
     InlineKeyboardMarkup,
@@ -1212,16 +1213,16 @@ def set_frules(update: Update, context: CallbackContext):
 
     if len(args) >= 1:
         msg = update.effective_message
-        try:
-            raw_text = msg.text_markdown_urled
-        except ValueError as e:
-            if "Nested entities are not supported for Markdown version 1" in e.args:
-                msg.reply_text("Nested entities are currently not supported.")
-                return
-
+        raw_text = msg.text
         args = raw_text.split(None, 1)  # use python's maxsplit to separate cmd and args
         if len(args) == 2:
-            markdown_rules = args[1]
+            txt = args[1]
+            offset = len(txt) - len(raw_text)  # set correct offset relative to command
+            markdown_rules = markdown_parser(
+                txt,
+                entities=msg.parse_entities(),
+                offset=offset,
+            )
         x = sql.set_frules(fed_id, markdown_rules)
         if not x:
             update.effective_message.reply_text(
@@ -1290,16 +1291,12 @@ def fed_broadcast(update: Update, context: CallbackContext):
             update.effective_message.reply_text("Only federation owners can do this!")
             return
         # Parsing md
-        try:
-            raw_text = msg.text_markdown_urled.split(
-                None, 1
-            )  # use python's maxsplit to separate cmd and args
-        except ValueError as e:
-            if "Nested entities are not supported for Markdown version 1" in e.args:
-                msg.reply_text("Nested entities are currently not supported.")
-                return
-
-        text = args[1]
+        raw_text = msg.text
+        args = raw_text.split(None, 1)  # use python's maxsplit to separate cmd and args
+        txt = args[1]
+        offset = len(txt) - len(raw_text)  # set correct offset relative to command
+        text_parser = markdown_parser(txt, entities=msg.parse_entities(), offset=offset)
+        text = text_parser
         try:
             broadcaster = user.first_name
         except:
