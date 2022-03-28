@@ -417,13 +417,7 @@ def save(update: Update, context: CallbackContext):
     if len(m) == 1:
         msg.reply_text("Provide something to save.")
         return
-    try:
-        note_name, text, data_type, content, buttons = get_note_type(msg)
-    except ValueError as e:
-        if "Nested entities are not supported for Markdown version 1" in e.args:
-            msg.reply_text("Nested entities are currently not supported.")
-            return
-
+    note_name, text, data_type, content, buttons = get_note_type(msg)
     note_name = note_name.lower()
     if data_type is None:
         msg.reply_text("Dude, there's no note")
